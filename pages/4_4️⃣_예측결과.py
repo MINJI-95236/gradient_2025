@@ -24,27 +24,26 @@ matplotlib.rcParams["axes.unicode_minus"] = False
 
 st.title("📈 4단계: 예측 결과")
 
-# 🔒 이전 단계 데이터 확인
+# 포함 검사
 if "x_values" not in st.session_state or "y_values" not in st.session_state:
     st.warning("이전 단계에서 데이터를 먼저 입력해 주세요.")
     st.stop()
 
-# ✅ 변수 설정
 x_raw = st.session_state.x_values
 y_raw = st.session_state.y_values
 x_label = st.session_state.get("x_label", "x")
 y_label = st.session_state.get("y_label", "y")
 
-# 📌 예측 파라미터 선택
+# 예측 파래미터 선택
 func_type = st.radio("🔢 함수 형태를 선택하세요:", ["1차 함수", "2차 함수"])
-learning_rate = st.selectbox("📘 학습률을 선택하세요:", [0.0001,0.001, 0.01, 0.1])
+learning_rate = st.selectbox("📘 학습률을 선택하세요:", [0.0001, 0.001, 0.01, 0.1])
 epoch = st.selectbox("🔁 반복 횟수를 선택하세요:", [100, 500, 1000, 5000])
 
-# 📊 누적 그래프를 저장할 리스트
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# 📉 경사하강법 함수 정의
+# 경상하견법 가설
+
 def gradient_descent_linear(x, y, lr, epochs):
     m, b = 0.0, 0.0
     n = len(x)
@@ -66,11 +65,9 @@ def gradient_descent_quadratic(x, y, lr, epochs):
         c -= lr * (2 / n) * error.sum()
     return a, b, c
 
-# 🎯 산점도 누적 예측 실행
 if st.button("📈 예측 실행"):
     x = np.array(x_raw)
     y = np.array(y_raw)
-
     x_mean = x.mean()
     x_centered = x - x_mean
     x_plot = np.linspace(x.min(), x.max(), 100)
@@ -85,9 +82,8 @@ if st.button("📈 예측 실행"):
         y_pred = a * x_input**2 + b * x_input + c
         equation = f"y = {a:.4f}x² + {b:.4f}x + {c:.4f}"
 
-    # 🔐 방어 코드: nan 또는 inf 방지
     if np.any(np.isnan(y_pred)) or np.any(np.isinf(y_pred)):
-        st.error("❌ 예측 도중 오류가 발생했습니다. 학습률을 낮추거나 반복 횟수를 줄여보세요.")
+        st.error("❌ 예측 동안 오류가 발생했습니다. 학습률을 낮이거나 반복 횟수를 줄어보세요.")
         st.stop()
 
     st.session_state.history.append({
@@ -99,7 +95,6 @@ if st.button("📈 예측 실행"):
         "x_mean": x_mean
     })
 
-# 📊 누적 그래프 출력 (각각의 그래프 따로)
 for i, run in enumerate(st.session_state.history):
     st.markdown(f"### 🔍 예측 {i+1}")
     fig, ax = plt.subplots()
@@ -115,22 +110,30 @@ for i, run in enumerate(st.session_state.history):
     else:
         ax.xaxis.set_major_formatter(ticker.ScalarFormatter())
     st.pyplot(fig)
-
-    st.markdown(
-    f"""
-    ✅ 예측이 완료되었습니다!  
-    📌 **수식**: {run['label']}  
-    📘 **학습률**: {run['lr']}  
+    st.markdown(f"""
+    ✅ 예측이 완료되었습니다!
+    🖋️ **수식**: {run['label']}
+    📘 **학습률**: {run['lr']}
     🔁 **반복 횟수**: {run['epoch']}
-    """
-)
+    """)
 
-# 다음 페이지로 이동
+# 예측선 선택 (checkbox 방식)
+if "selected_model_indices" not in st.session_state:
+    st.session_state.selected_model_indices = []
+
 if st.session_state.history:
-    display_options = [f"예측 {i+1}: {run['label']}" for i, run in enumerate(st.session_state.history)]
-    selected = st.multiselect("📌 다음 단계로 보낼 예측선을 선택하세요:", options=display_options)
-    if st.button("➡️ 다음 단계로 이동") and selected:
-        selected_indices = [display_options.index(s) for s in selected]
-        st.session_state.selected_model_indices = selected_indices
-        st.switch_page("pages/5_5️⃣_예측입력.py")
+    st.markdown("## 📌 다음 단계로 보내기")
+    selected = []
+    for i, run in enumerate(st.session_state.history):
+        label = f"예측 {i+1}: {run['label']}"
+        checked = st.checkbox(label, key=f"check_{i}")
+        if checked:
+            selected.append(i)
 
+    st.session_state.selected_model_indices = selected
+
+    if st.button("➡️ 다음 단계로 이동"):
+        if selected:
+            st.switch_page("pages/5_5️⃣_예측입력.py")
+        else:
+            st.warning("⚠️ 예측선을 하나 이상 선택해야 다음 단계로 이동할 수 있어요.")
