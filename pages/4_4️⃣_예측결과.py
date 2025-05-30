@@ -111,11 +111,13 @@ for i, run in enumerate(st.session_state.history):
         ax.xaxis.set_major_formatter(ticker.ScalarFormatter())
     st.pyplot(fig)
     st.markdown(f"""
-    ✅ 예측이 완료되었습니다!
-    🖋️ **수식**: {run['label']}
-    📘 **학습률**: {run['lr']}
+    ---
+    #### ✅ <span style='color:#00C851'>예측이 완료되었습니다!</span>  
+    🖋️ **수식**: {run['label']}  
+    📘 **학습률**: {run['lr']}  
     🔁 **반복 횟수**: {run['epoch']}
-    """)
+    """, unsafe_allow_html=True)
+
 
 # 예측선 선택 (checkbox 방식)
 if "selected_model_indices" not in st.session_state:

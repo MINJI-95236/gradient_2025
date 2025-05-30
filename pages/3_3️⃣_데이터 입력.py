@@ -30,15 +30,24 @@ if "name" not in st.session_state or "subject" not in st.session_state:
     st.stop()
 
 # ✅ x, y 라벨 초기화
-if "x_label" not in st.session_state:
-    st.session_state.x_label = "공부 시간"
-if "y_label" not in st.session_state:
-    st.session_state.y_label = "성적"
+# 기본 라벨 (예: placeholder 용)
+default_x = "예: 공부 시간"
+default_y = "예: 성적"
 
-x_label = st.text_input("x축 이름", value=st.session_state.x_label)
-y_label = st.text_input("y축 이름", value=st.session_state.y_label)
-st.session_state.x_label = x_label
-st.session_state.y_label = y_label
+# 세션에서 꺼내되, 없으면 빈 문자열로
+x_label = st.text_input("x축 이름", value=st.session_state.get("x_label", ""), placeholder=default_x)
+y_label = st.text_input("y축 이름", value=st.session_state.get("y_label", ""), placeholder=default_y)
+
+# 빈 값일 경우 기본 라벨 사용 (표 컬럼 에러 방지용)
+safe_x_label = x_label if x_label.strip() else default_x
+safe_y_label = y_label if y_label.strip() else default_y
+
+# session_state에는 입력된 값만 저장
+if x_label.strip():
+    st.session_state.x_label = x_label
+if y_label.strip():
+    st.session_state.y_label = y_label
+
 
 #st.info("✏️ 데이터는 저장하지 않으면 유지되지 않아요!")
 
@@ -47,7 +56,7 @@ if "table_data" not in st.session_state:
     st.session_state.table_data = pd.DataFrame({"x": [0.0] * 10, "y": [0.0] * 10})
 
 # 🔁 표시용 데이터프레임 (항상 내부적으로는 x/y)
-display_data = st.session_state.table_data.rename(columns={"x": x_label, "y": y_label})
+display_data = st.session_state.table_data.rename(columns={"x": safe_x_label, "y": safe_y_label})
 with st.expander("📘 사용 순서 안내 (클릭해서 열기)"):
     st.markdown("""
     1. **x축/y축 이름을 먼저 입력하세요.**  
