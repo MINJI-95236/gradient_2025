@@ -24,4 +24,4 @@ if "name" in st.session_state:
     col1, col2, col3 = st.columns([3, 1, 1])
     with col3:
         if st.button("➡️ 다음"):
-            st.switch_page("pages/2_2️⃣_분석주제.py")
+            st.switch_page("pages/4_2️⃣_분석주제.py")

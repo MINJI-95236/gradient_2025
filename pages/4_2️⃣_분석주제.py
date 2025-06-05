@@ -29,4 +29,4 @@ if "subject" in st.session_state:
     col1, col2, col3 = st.columns([3, 1, 1])
     with col3:
         if st.button("➡️ 다음"):
-            st.switch_page("pages/3_3️⃣_데이터 입력.py")
+            st.switch_page("pages/4_3️⃣_데이터 입력.py")

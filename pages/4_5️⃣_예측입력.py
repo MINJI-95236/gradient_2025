@@ -9,19 +9,13 @@ import io
 import tempfile
 from PIL import Image
 
-# ✅ 한글 폰트 설정
-try:
-    font_path = "/usr/share/fonts/truetype/nanum/NanumGothic.ttf"
-    font_name = fm.FontProperties(fname=font_path).get_name()
-    matplotlib.rc("font", family=font_name)
-except:
-    if platform.system() == "Windows":
-        matplotlib.rc("font", family="Malgun Gothic")
-    elif platform.system() == "Darwin":
-        matplotlib.rc("font", family="AppleGothic")
-    else:
-        matplotlib.rc("font", family="DejaVu Sans")
-matplotlib.rcParams["axes.unicode_minus"] = False
+from matplotlib import font_manager
+
+# 프로젝트 내 폰트 경로 등록
+font_path = "./fonts/NotoSansKR-Regular.ttf"
+font_manager.fontManager.addfont(font_path)
+plt.rcParams["font.family"] = "Noto Sans KR"
+plt.rcParams["axes.unicode_minus"] = False
 
 st.title("✏️ 5단계: 예측 결과 해석하기")
 
@@ -59,7 +53,6 @@ for idx in st.session_state.selected_model_indices:
     # ℹ️ 수식 및 정보 출력
     st.markdown(
         f"""
-        ✅ 예측이 완료되었습니다!  
         📌 **수식**: {run['label']}  
         📘 **학습률**: {run['lr']}  
         🔁 **반복 횟수**: {run['epoch']}
