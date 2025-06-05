@@ -2,18 +2,32 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import platform
-
-# 한글 폰트 설정
-if platform.system() == 'Darwin':  # macOS
-    plt.rcParams['font.family'] = 'AppleGothic'
-elif platform.system() == 'Windows':  # Windows
-    plt.rcParams['font.family'] = 'Malgun Gothic'
-else:  # Linux (예: Ubuntu 등)
-    plt.rcParams['font.family'] = 'NanumGothic'
-
-plt.rcParams['axes.unicode_minus'] = False  # 음수 기호 깨짐 방지
+import matplotlib.ticker as ticker
+from matplotlib.ticker import MaxNLocator
+import os
+from matplotlib import font_manager as fm
+import matplotlib
+matplotlib.use("Agg")  # ✅ Streamlit에서 안정적으로 폰트 렌더링
 
 
+# ✅ 한글 폰트 설정
+font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
+if os.path.exists(font_path):
+    fm.fontManager.addfont(font_path)  # ✅ 강제 등록
+    font_name = fm.FontProperties(fname=font_path).get_name()
+    plt.rcParams["font.family"] = font_name
+    font_prop = fm.FontProperties(fname=font_path)
+
+else:
+    if platform.system() == "Darwin":
+        plt.rcParams["font.family"] = "AppleGothic"
+    elif platform.system() == "Windows":
+        plt.rcParams["font.family"] = "Malgun Gothic"
+    else:
+        plt.rcParams["font.family"] = "DejaVu Sans"
+    font_prop = None
+
+plt.rcParams["axes.unicode_minus"] = False
 
 # ---------------- 데이터 및 함수 정의 ----------------
 np.random.seed(42)
@@ -91,7 +105,7 @@ with btn_row[0]:
     if st.button("📈 선택한 학습률로 그래프 그리기", use_container_width=True):
         if selected_rates:
             st.session_state.draw_graph = True
-            st.session_state.selected_rates_snapshot = selected_rates.copy()  # ✅ 선택 상태 저장
+            st.session_state.selected_rates_snapshot = selected_rates.copy()
         else:
             st.warning("학습률을 하나 이상 선택해주세요.")
             st.session_state.draw_graph = False
@@ -120,12 +134,17 @@ if st.session_state.draw_graph and "selected_rates_snapshot" in st.session_state
             fig, ax = plt.subplots()
             ax.scatter(x, y, color="blue", label="입력 데이터")
             ax.plot(x_plot + x_mean, y_pred, color="red", label=f"예측선 (lr={lr})")
-            ax.set_title(f"학습률 {lr} 에 대한 예측 결과")
-            ax.set_xlabel("x")
-            ax.set_ylabel("y")
-            ax.legend()
+            if font_prop:
+                ax.set_title(f"학습률 {lr} 에 대한 예측 결과", fontproperties=font_prop)
+                ax.set_xlabel("x", fontproperties=font_prop)
+                ax.set_ylabel("y", fontproperties=font_prop)
+                ax.legend(prop=font_prop)
+            else:
+                ax.set_title(f"학습률 {lr} 에 대한 예측 결과")
+                ax.set_xlabel("x")
+                ax.set_ylabel("y")
+                ax.legend()
             st.pyplot(fig)
-
 
 # ---------------- 실습 정리 ----------------
 st.markdown("### 📘 실습을 통해 무엇을 배웠나요?")

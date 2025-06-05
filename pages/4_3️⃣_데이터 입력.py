@@ -6,19 +6,22 @@ import matplotlib.font_manager as fm
 import matplotlib
 import matplotlib.ticker as ticker
 from matplotlib.ticker import MaxNLocator
+import os
 
 # ✅ 한글 폰트 설정
-try:
-    font_path = "/usr/share/fonts/truetype/nanum/NanumGothic.ttf"
-    font_name = fm.FontProperties(fname=font_path).get_name()
-    matplotlib.rc("font", family=font_name)
-except:
-    if platform.system() == "Windows":
-        matplotlib.rc("font", family="Malgun Gothic")
-    elif platform.system() == "Darwin":
-        matplotlib.rc("font", family="AppleGothic")
+font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
+if os.path.exists(font_path):
+    font_prop = fm.FontProperties(fname=font_path)
+    matplotlib.rcParams["font.family"] = font_prop.get_name()
+else:
+    if platform.system() == "Darwin":
+        matplotlib.rcParams["font.family"] = "AppleGothic"
+    elif platform.system() == "Windows":
+        matplotlib.rcParams["font.family"] = "Malgun Gothic"
     else:
-        matplotlib.rc("font", family="DejaVu Sans")
+        matplotlib.rcParams["font.family"] = "DejaVu Sans"
+    font_prop = None
+
 matplotlib.rcParams["axes.unicode_minus"] = False
 
 st.title("📊 3단계: 데이터 입력 (표 형태)")
@@ -131,9 +134,16 @@ if st.session_state.show_plot:
             x_valid, y_valid = zip(*valid_data)
             fig, ax = plt.subplots(figsize=(10, 6))
             ax.scatter(x_valid, y_valid)
-            ax.set_xlabel(x_label)
-            ax.set_ylabel(y_label)
-            ax.set_title("산점도 확인하기")
+
+            if font_prop:
+                ax.set_xlabel(x_label, fontproperties=font_prop)
+                ax.set_ylabel(y_label, fontproperties=font_prop)
+                ax.set_title("산점도 확인하기", fontproperties=font_prop)
+            else:
+                ax.set_xlabel(x_label)
+                ax.set_ylabel(y_label)
+                ax.set_title("산점도 확인하기")
+
             ax.xaxis.set_major_locator(MaxNLocator(nbins='auto', prune='both'))
 
             import matplotlib.ticker as mtick
@@ -142,6 +152,7 @@ if st.session_state.show_plot:
                 ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%d'))
             else:
                 ax.xaxis.set_major_formatter(ticker.ScalarFormatter())
+
             fig.tight_layout()
             st.pyplot(fig)
 

@@ -8,14 +8,23 @@ from fpdf import FPDF
 import io
 import tempfile
 from PIL import Image
+import os
 
-from matplotlib import font_manager
+# ✅ 폰트 설정
+font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
+if os.path.exists(font_path):
+    font_prop = fm.FontProperties(fname=font_path)
+    matplotlib.rcParams["font.family"] = font_prop.get_name()
+else:
+    if platform.system() == "Darwin":
+        matplotlib.rcParams["font.family"] = "AppleGothic"
+    elif platform.system() == "Windows":
+        matplotlib.rcParams["font.family"] = "Malgun Gothic"
+    else:
+        matplotlib.rcParams["font.family"] = "DejaVu Sans"
+    font_prop = None
 
-# 프로젝트 내 폰트 경로 등록
-font_path = "./fonts/NotoSansKR-Regular.ttf"
-font_manager.fontManager.addfont(font_path)
-plt.rcParams["font.family"] = "Noto Sans KR"
-plt.rcParams["axes.unicode_minus"] = False
+matplotlib.rcParams["axes.unicode_minus"] = False
 
 st.title("✏️ 5단계: 예측 결과 해석하기")
 
@@ -39,10 +48,16 @@ for idx in st.session_state.selected_model_indices:
     fig, ax = plt.subplots()
     ax.scatter(x_raw, y_raw, color="blue", label="입력 데이터")
     ax.plot(run["x_plot"], run["y_pred"], color="red", label="예측선")
-    ax.set_xlabel(x_label)
-    ax.set_ylabel(y_label)
-    ax.set_title(f"예측 결과 {idx+1}")
-    ax.legend()
+    if font_prop:
+        ax.set_xlabel(x_label, fontproperties=font_prop)
+        ax.set_ylabel(y_label, fontproperties=font_prop)
+        ax.set_title(f"예측 결과 {idx+1}", fontproperties=font_prop)
+        ax.legend(prop=font_prop)
+    else:
+        ax.set_xlabel(x_label)
+        ax.set_ylabel(y_label)
+        ax.set_title(f"예측 결과 {idx+1}")
+        ax.legend()
     ax.xaxis.set_major_locator(MaxNLocator(nbins='auto', prune='both'))
     if all(float(x).is_integer() for x in x_raw):
         ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
@@ -95,10 +110,16 @@ if st.button("📄 PDF로 저장"):
         fig, ax = plt.subplots()
         ax.scatter(x_raw, y_raw, color="blue", label="입력 데이터")
         ax.plot(run["x_plot"], run["y_pred"], color="red", label="예측선")
-        ax.set_xlabel(x_label)
-        ax.set_ylabel(y_label)
-        ax.set_title(f"예측 결과 {i+1}")
-        ax.legend()
+        if font_prop:
+            ax.set_xlabel(x_label, fontproperties=font_prop)
+            ax.set_ylabel(y_label, fontproperties=font_prop)
+            ax.set_title(f"예측 결과 {i+1}", fontproperties=font_prop)
+            ax.legend(prop=font_prop)
+        else:
+            ax.set_xlabel(x_label)
+            ax.set_ylabel(y_label)
+            ax.set_title(f"예측 결과 {i+1}")
+            ax.legend()
         ax.xaxis.set_major_locator(MaxNLocator(nbins='auto', prune='both'))
         if all(float(x).is_integer() for x in x_raw):
             ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
@@ -107,9 +128,9 @@ if st.button("📄 PDF로 저장"):
 
         with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmpfile:
             fig.savefig(tmpfile.name, dpi=150, bbox_inches='tight')
-            pdf.image(tmpfile.name, x=10, w=180)  # ✅ PDF에 이미지 삽입
+            pdf.image(tmpfile.name, x=10, w=180)
 
-        plt.close(fig)  # 리소스 정리
+        plt.close(fig)
 
     pdf_output = bytes(pdf.output(dest='S'))
 
@@ -119,7 +140,6 @@ if st.button("📄 PDF로 저장"):
         file_name="ai_예측_학습지.pdf",
         mime="application/pdf"
     )
-
 
 st.markdown("---")
 st.success("✅ 예측 결과에 대한 해석을 모두 마쳤습니다!")

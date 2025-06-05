@@ -2,15 +2,26 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import platform
+import matplotlib.ticker as ticker
+from matplotlib.ticker import MaxNLocator
+import os
+from matplotlib import font_manager as fm
 
-# 한글 폰트 설정
-if platform.system() == 'Darwin':
-    plt.rcParams['font.family'] = 'AppleGothic'
-elif platform.system() == 'Windows':
-    plt.rcParams['font.family'] = 'Malgun Gothic'
+# ✅ 한글 폰트 설정
+font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
+if os.path.exists(font_path):
+    font_prop = fm.FontProperties(fname=font_path)
+    plt.rcParams["font.family"] = font_prop.get_name()
 else:
-    plt.rcParams['font.family'] = 'NanumGothic'
-plt.rcParams['axes.unicode_minus'] = False
+    if platform.system() == "Darwin":
+        plt.rcParams["font.family"] = "AppleGothic"
+    elif platform.system() == "Windows":
+        plt.rcParams["font.family"] = "Malgun Gothic"
+    else:
+        plt.rcParams["font.family"] = "DejaVu Sans"
+    font_prop = None
+
+plt.rcParams["axes.unicode_minus"] = False
 
 # ---------------- 데이터 및 설정 ----------------
 np.random.seed(42)
@@ -115,10 +126,16 @@ if st.session_state.draw_graph_epochs and "selected_epochs_snapshot" in st.sessi
             fig, ax = plt.subplots()
             ax.scatter(x, y, color="blue", label="입력 데이터")
             ax.plot(x_plot + x_mean, y_pred, color="red", label=f"예측선 (반복={ep})")
-            ax.set_title(f"반복횟수 {ep}회에 대한 예측 결과")
-            ax.set_xlabel("x")
-            ax.set_ylabel("y")
-            ax.legend()
+            if font_prop:
+                ax.set_title(f"반복횟수 {ep}회에 대한 예측 결과", fontproperties=font_prop)
+                ax.set_xlabel("x", fontproperties=font_prop)
+                ax.set_ylabel("y", fontproperties=font_prop)
+                ax.legend(prop=font_prop)
+            else:
+                ax.set_title(f"반복횟수 {ep}회에 대한 예측 결과")
+                ax.set_xlabel("x")
+                ax.set_ylabel("y")
+                ax.legend()
             st.pyplot(fig)
 
 # ---------------- 정리 영역 ----------------
