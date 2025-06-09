@@ -9,15 +9,13 @@ from matplotlib import font_manager as fm
 import matplotlib
 matplotlib.use("Agg")  # ✅ Streamlit에서 안정적으로 폰트 렌더링
 
-
 # ✅ 한글 폰트 설정
 font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
 if os.path.exists(font_path):
-    fm.fontManager.addfont(font_path)  # ✅ 강제 등록
+    fm.fontManager.addfont(font_path)
     font_name = fm.FontProperties(fname=font_path).get_name()
     plt.rcParams["font.family"] = font_name
     font_prop = fm.FontProperties(fname=font_path)
-
 else:
     if platform.system() == "Darwin":
         plt.rcParams["font.family"] = "AppleGothic"
@@ -30,9 +28,9 @@ else:
 plt.rcParams["axes.unicode_minus"] = False
 
 # ---------------- 데이터 및 함수 정의 ----------------
-np.random.seed(42)
-x = np.linspace(1, 10, 20)
-y = 2 * x + 1 + np.random.normal(0, 1, size=len(x))
+x = np.linspace(0, 20, 20)
+noise = np.random.normal(0, 2.0, size=len(x))  # 더 강한 노이즈로 분산 증가
+y = 5 * x + 10 + noise
 
 x_mean = np.mean(x)
 x_centered = x - x_mean
@@ -41,7 +39,7 @@ x_plot = x_input - x_mean
 fixed_epochs = 100
 
 def gradient_descent(x, y, lr, epochs):
-    m, b = 0, 0
+    m, b = 10, -10  # ✅ 안정적인 시작점 설정
     n = len(x)
     for _ in range(epochs):
         y_pred = m * x + b
@@ -69,13 +67,11 @@ if st.session_state.select_action == "select_all":
         st.session_state[f"lr_checkbox_{lr}"] = True
     st.session_state.select_action = None
     st.rerun()
-
 elif st.session_state.select_action == "clear_all":
     for lr in learning_rates:
         st.session_state[f"lr_checkbox_{lr}"] = False
     st.session_state.select_action = None
     st.rerun()
-
 elif st.session_state.select_action == "reset":
     for lr in learning_rates:
         st.session_state[f"lr_checkbox_{lr}"] = (lr == 0.001)
@@ -86,7 +82,6 @@ elif st.session_state.select_action == "reset":
 # ---------------- UI 구성 시작 ----------------
 st.markdown("## 🔍 학습률 실습")
 
-# 학습률 체크박스
 st.markdown("### ✅ 비교하고 싶은 학습률을 선택하세요:")
 cols = st.columns(len(learning_rates))
 selected_rates = []
@@ -99,7 +94,6 @@ current_selected = selected_rates.copy()
 
 st.markdown("")
 
-# 실행 및 제어 버튼 한 줄 구성
 btn_row = st.columns([2, 1, 1, 1])
 with btn_row[0]:
     if st.button("📈 선택한 학습률로 그래프 그리기", use_container_width=True):
@@ -133,7 +127,7 @@ if st.session_state.draw_graph and "selected_rates_snapshot" in st.session_state
 
             fig, ax = plt.subplots()
             ax.scatter(x, y, color="blue", label="입력 데이터")
-            ax.plot(x_plot + x_mean, y_pred, color="red", label=f"예측선 (lr={lr})")
+            ax.plot(x_plot + x_mean, y_pred, color="red", label=f"예측선 (학습률={lr})")
             if font_prop:
                 ax.set_title(f"학습률 {lr} 에 대한 예측 결과", fontproperties=font_prop)
                 ax.set_xlabel("x", fontproperties=font_prop)
@@ -151,6 +145,6 @@ st.markdown("### 📘 실습을 통해 무엇을 배웠나요?")
 st.text_area(
     "여러 학습률을 비교한 결과, 어떤 점을 배웠나요? 가장 적절한 학습률은 무엇이라고 생각하나요?",
     height=150,
-    placeholder="예: 학습률 0.001이 가장 안정적으로 수렴함을 확인했습니다. 너무 큰 값은 발산하고, 너무 작은 값은 변화가 거의 없습니다.",
+    placeholder="예: 학습률 0.01이 가장 안정적으로 수렴함을 확인했습니다. 너무 큰 값은 발산하고, 너무 작은 값은 변화가 거의 없습니다.",
     key="final_summary"
 )

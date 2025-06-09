@@ -99,6 +99,7 @@ col1, col2, col3 = st.columns([1, 1, 1])
 # 💾 데이터 저장
 with col1:
     if st.button("💾 데이터 저장"):
+        st.info("📌 저장 후 [📊 산점도 보기]를 눌러야 다음 단계로 이동할 수 있습니다.")
         try:
             st.session_state.x_label = x_label
             st.session_state.y_label = y_label
@@ -116,7 +117,7 @@ with col2:
 # 🔄 초기화
 with col3:
     if st.button("🔄 데이터 초기화"):
-        st.session_state.table_data = pd.DataFrame({"x": [0.0] * 10, "y": [0.0] * 10})
+        st.session_state.table_data = pd.DataFrame({"x": [None]*10, "y": [None]*10})
         st.session_state.show_plot = False
         st.success("모든 데이터가 초기화되었습니다.")
 

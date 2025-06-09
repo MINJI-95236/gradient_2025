@@ -25,8 +25,9 @@ plt.rcParams["axes.unicode_minus"] = False
 
 # ---------------- 데이터 및 설정 ----------------
 np.random.seed(42)
-x = np.linspace(1, 10, 20)
-y = 2 * x + 1 + np.random.normal(0, 1, size=len(x))
+x = np.linspace(0, 20, 20)
+noise = np.random.normal(0, 2.0, size=len(x))
+y = 5 * x + 10 + noise
 
 x_mean = np.mean(x)
 x_centered = x - x_mean
@@ -38,7 +39,7 @@ epoch_options = [100, 500, 1000, 5000]
 
 # 경사하강법 함수
 def gradient_descent(x, y, lr, epochs):
-    m, b = 0, 0
+    m, b = 10, -10  # ✅ 안정적인 시작점 설정
     n = len(x)
     for _ in range(epochs):
         y_pred = m * x + b
@@ -117,7 +118,7 @@ with btn_row[3]:
 # ---------------- 결과 출력 ----------------
 if st.session_state.draw_graph_epochs and "selected_epochs_snapshot" in st.session_state:
     st.markdown("### 📊 반복횟수별 그래프 비교")
-    tabs = st.tabs([f"반복={ep}" for ep in st.session_state.selected_epochs_snapshot])
+    tabs = st.tabs([f"반복횟수={ep}" for ep in st.session_state.selected_epochs_snapshot])
     for i, ep in enumerate(st.session_state.selected_epochs_snapshot):
         with tabs[i]:
             m, b = gradient_descent(x_centered, y, fixed_learning_rate, ep)
@@ -125,7 +126,7 @@ if st.session_state.draw_graph_epochs and "selected_epochs_snapshot" in st.sessi
 
             fig, ax = plt.subplots()
             ax.scatter(x, y, color="blue", label="입력 데이터")
-            ax.plot(x_plot + x_mean, y_pred, color="red", label=f"예측선 (반복={ep})")
+            ax.plot(x_plot + x_mean, y_pred, color="red", label=f"예측선 (반복횟수={ep})")
             if font_prop:
                 ax.set_title(f"반복횟수 {ep}회에 대한 예측 결과", fontproperties=font_prop)
                 ax.set_xlabel("x", fontproperties=font_prop)

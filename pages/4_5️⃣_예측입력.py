@@ -75,71 +75,29 @@ for idx in st.session_state.selected_model_indices:
     )
 
     # 📝 학생 입력 칸
-    st.text_area(
+    # 반복 안에서 명시적으로 저장
+    value = st.text_area(
         f"🧠 예측 {idx+1} 해석 입력",
+        value=st.session_state.get(f"reflection_{idx}", ""),
         placeholder="이 예측선은 어떤 의미를 가질까요? 예측 결과를 해석해봅시다.",
-        key=f"reflection_{idx}"
-    )
+        key=f"text_area_{idx}"  # 키는 UI용으로 별도로 둡니다
+        )
+    st.session_state[f"reflection_{idx}"] = value
 
-# 📄 PDF 저장 버튼
-if st.button("📄 PDF로 저장"):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.add_font('NotoSans', '', 'fonts/NotoSansKR-Regular.ttf', uni=True)
-    pdf.set_font('NotoSans', size=14)
 
-    pdf.cell(200, 10, txt="📘 나의 AI 예측 학습지", ln=True)
-    pdf.set_font('NotoSans', size=12)
-    pdf.ln(5)
-    pdf.cell(200, 10, txt=f"이름: {st.session_state.get('name', '')}  학번: {st.session_state.get('student_id', '')}", ln=True)
-    pdf.cell(200, 10, txt=f"학교: {st.session_state.get('school', '')}  날짜: {st.session_state.get('date', '')}", ln=True)
-    pdf.ln(5)
-    pdf.multi_cell(0, 10, txt=f"🔍 분석 주제: {st.session_state.get('subject', '')}")
 
-    for i, idx in enumerate(st.session_state.selected_model_indices):
-        run = st.session_state.history[idx]
-        pdf.ln(5)
-        pdf.set_font('NotoSans', size=12)
-        pdf.cell(200, 10, txt=f"예측 {i+1} 수식:", ln=True)
-        pdf.multi_cell(0, 10, txt=f"{run['label']}")
-        pdf.cell(200, 10, txt=f"학습률: {run['lr']} / 반복횟수: {run['epoch']}", ln=True)
-        reflection = st.session_state.get(f"reflection_{idx}", "(미작성)")
-        pdf.multi_cell(0, 10, txt=f"📝 해석: {reflection}")
-
-        # ✅ 예측 그래프 생성 및 이미지 저장
-        fig, ax = plt.subplots()
-        ax.scatter(x_raw, y_raw, color="blue", label="입력 데이터")
-        ax.plot(run["x_plot"], run["y_pred"], color="red", label="예측선")
-        if font_prop:
-            ax.set_xlabel(x_label, fontproperties=font_prop)
-            ax.set_ylabel(y_label, fontproperties=font_prop)
-            ax.set_title(f"예측 결과 {i+1}", fontproperties=font_prop)
-            ax.legend(prop=font_prop)
-        else:
-            ax.set_xlabel(x_label)
-            ax.set_ylabel(y_label)
-            ax.set_title(f"예측 결과 {i+1}")
-            ax.legend()
-        ax.xaxis.set_major_locator(MaxNLocator(nbins='auto', prune='both'))
-        if all(float(x).is_integer() for x in x_raw):
-            ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
-        else:
-            ax.xaxis.set_major_formatter(ScalarFormatter())
-
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmpfile:
-            fig.savefig(tmpfile.name, dpi=150, bbox_inches='tight')
-            pdf.image(tmpfile.name, x=10, w=180)
-
-        plt.close(fig)
-
-    pdf_output = bytes(pdf.output(dest='S'))
-
-    st.download_button(
-        label="📥 PDF 다운로드",
-        data=pdf_output,
-        file_name="ai_예측_학습지.pdf",
-        mime="application/pdf"
-    )
+st.success("✅ 예측 결과에 대한 해석을 모두 마쳤습니다!")
 
 st.markdown("---")
-st.success("✅ 예측 결과에 대한 해석을 모두 마쳤습니다!")
+st.subheader("📘 최종 요약 페이지로 이동")
+
+if st.button("➡️ 최종 요약 보기"):
+    # ✅ 해석 내용 강제 저장 (빈 문자열도 기본값 설정)
+    for idx in st.session_state.selected_model_indices:
+        key = f"reflection_{idx}"
+        value = st.session_state.get(key, "").strip()
+        if not value:
+            st.session_state[key] = "해석이 작성되지 않았습니다."
+
+    st.switch_page("pages/4_6️⃣_요약결과.py")
+
