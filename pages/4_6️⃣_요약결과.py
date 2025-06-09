@@ -71,7 +71,7 @@ with st.container():
 
     if 'x_values' in st.session_state and 'y_values' in st.session_state:
         st.markdown("#### \U0001F4C8 산점도 그래프")
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(6, 4)) 
         ax.scatter(st.session_state.x_values, st.session_state.y_values, color='blue')
         if font_prop:
             ax.set_xlabel(st.session_state.get("x_label", "x"), fontproperties=font_prop)
@@ -105,7 +105,7 @@ with st.container():
             with st.expander(f"🔍 모델 {idx + 1} (학습률={model['lr']}, 반복횟수={model['epoch']})"):
                 st.markdown(f"**예측 수식:** `{model['label']}`")
 
-                fig, ax = plt.subplots()
+                fig, ax = plt.subplots(figsize=(6, 4)) 
                 ax.scatter(st.session_state.x_values, st.session_state.y_values, label="입력 데이터", color="blue")
                 ax.plot(model["x_plot"], model["y_pred"], label="예측 선", color="red")
                 if font_prop:
