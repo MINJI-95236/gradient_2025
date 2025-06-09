@@ -20,6 +20,31 @@ else:
         matplotlib.rcParams["font.family"] = "DejaVu Sans"
     font_prop = None
 matplotlib.rcParams["axes.unicode_minus"] = False
+st.markdown("""
+    <style>
+        html, body, [data-testid="stAppViewContainer"], .main, .block-container {
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+        }
+
+        [data-testid="stVerticalBlock"] {
+            overflow: visible !important;
+        }
+
+        .stButton button {
+            margin-top: 12px;
+        }
+
+        /* 페이지 인쇄 시 자동 색상 반전 방지 */
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 st.set_page_config(page_title="요약 결과", layout="wide")
 st.title("\U0001F4D8 최종 요약 결과")
