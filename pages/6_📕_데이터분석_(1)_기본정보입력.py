@@ -1,6 +1,12 @@
 import streamlit as st
 
-st.title("📘 1단계: 기본 정보 입력")
+st.set_page_config(
+    page_title="📕 데이터분석 (1) 기본 정보 입력",
+    page_icon="📕",
+    layout="centered"
+)
+
+st.title("📕 (1) 기본 정보 입력")
 
 name = st.text_input("이름", value=st.session_state.get("name", ""), key="input_name")
 student_id = st.text_input("학번", value=st.session_state.get("student_id", ""), key="input_id")
@@ -24,4 +30,4 @@ if "name" in st.session_state:
     col1, col2, col3 = st.columns([3, 1, 1])
     with col3:
         if st.button("➡️ 다음"):
-            st.switch_page("pages/4_2️⃣_분석주제.py")
+            st.switch_page("pages/7_📕_데이터분석_(2)_분석주제선택.py")

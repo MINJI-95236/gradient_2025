@@ -6,6 +6,12 @@ import matplotlib.font_manager as fm
 import matplotlib
 import os
 
+st.set_page_config(
+    page_title="📕 데이터분석 (6) 요약 결과",
+    page_icon="📕",
+    layout="wide"
+)
+
 # ✅ 폰트 설정
 font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
 if os.path.exists(font_path):
@@ -21,7 +27,6 @@ else:
     font_prop = None
 matplotlib.rcParams["axes.unicode_minus"] = False
 
-st.set_page_config(page_title="요약 결과", layout="wide")
 st.markdown("""
     <style>
         html, body, [data-testid="stAppViewContainer"], .main, .block-container {
@@ -66,7 +71,7 @@ st.markdown("""
 
 
 
-st.title("\U0001F4D8 최종 요약 결과")
+st.title("📕 (6) 요약 결과")
 
 # 1️⃣ 기본 정보 섹션
 with st.container():

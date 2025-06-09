@@ -24,7 +24,13 @@ else:
 
 matplotlib.rcParams["axes.unicode_minus"] = False
 
-st.title("📊 3단계: 데이터 입력 (표 형태)")
+st.set_page_config(
+    page_title="📕 데이터분석 (3) 데이터 입력",
+    page_icon="📕",
+    layout="centered"
+)
+
+st.title("📕 (3) 데이터 입력")
 
 # 🔒 이전 단계 확인
 if "name" not in st.session_state or "subject" not in st.session_state:
@@ -178,4 +184,5 @@ if "x_values" in st.session_state and "y_values" in st.session_state:
     colA, colB, colC = st.columns([3, 1, 1])
     with colC:
         if st.button("➡️ 다음"):
-            st.switch_page("pages/4_4️⃣_예측결과.py")
+            st.switch_page("pages/9_📕_데이터분석_(4)_예측실행.py")
+

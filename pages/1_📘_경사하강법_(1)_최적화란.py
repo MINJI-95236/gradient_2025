@@ -1,6 +1,17 @@
 import streamlit as st
 
-st.title("📘 경사하강법 · 1단계: 최적화란?")
+st.set_page_config(
+    page_title="경사하강법 (1) 최적화란?",
+    page_icon="📘",
+    layout="centered"
+)
+
+st.title("📘 (1) 경사하강법-최적화")
+col1, col2, col3 = st.columns([2, 7, 3])  # col3이 오른쪽 끝
+with col3:
+    if st.button("🏠 홈으로"):
+        st.switch_page("app.py")  # 또는 정확한 페이지 경로
+
 
 st.markdown("""
 ### 🧠 최적화란?

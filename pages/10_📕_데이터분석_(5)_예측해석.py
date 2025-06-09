@@ -26,7 +26,13 @@ else:
 
 matplotlib.rcParams["axes.unicode_minus"] = False
 
-st.title("✏️ 5단계: 예측 결과 해석하기")
+st.set_page_config(
+    page_title="📕 데이터분석 (5) 예측 해석",
+    page_icon="📕",
+    layout="centered"
+)
+
+st.title("📕 (5) 예측 해석")
 
 # 🔒 이전 단계 데이터 확인
 if "selected_model_indices" not in st.session_state or "history" not in st.session_state:
@@ -99,5 +105,6 @@ if st.button("➡️ 최종 요약 보기"):
         if not value:
             st.session_state[key] = "해석이 작성되지 않았습니다."
 
-    st.switch_page("pages/4_6️⃣_요약결과.py")
+    st.switch_page("pages/11_📕_데이터분석_(6)_요약결과.py")
+
 

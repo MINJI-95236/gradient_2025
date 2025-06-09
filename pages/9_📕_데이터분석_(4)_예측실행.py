@@ -26,7 +26,13 @@ else:
 
 matplotlib.rcParams["axes.unicode_minus"] = False
 
-st.title("📈 4단계: 예측 결과")
+st.set_page_config(
+    page_title="📕 데이터분석 (4) 예측 실행",
+    page_icon="📕",
+    layout="centered"
+)
+
+st.title("📕 (4) 예측 실행")
 
 # 포함 검사
 if "x_values" not in st.session_state or "y_values" not in st.session_state:
@@ -180,6 +186,7 @@ if st.session_state.history:
 
     if st.button("➡️ 다음 단계로 이동"):
         if selected:
-            st.switch_page("pages/4_5️⃣_예측입력.py")
+            st.switch_page("pages/10_📕_데이터분석_(5)_예측해석.py")
+
         else:
             st.warning("⚠️ 예측선을 하나 이상 선택해야 다음 단계로 이동할 수 있어요.")

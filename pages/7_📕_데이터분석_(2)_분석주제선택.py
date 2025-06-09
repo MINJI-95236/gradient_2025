@@ -1,6 +1,10 @@
 import streamlit as st
-
-st.title("📘 2단계: 분석 주제 입력")
+st.set_page_config(
+    page_title="📕 데이터분석 (2) 분석 주제 선택",
+    page_icon="📕",
+    layout="centered"
+)
+st.title("📕 (2) 분석 주제 선택")
 
 # 1단계에서 입력하지 않을 경우 경고 멘트 
 if "name" not in st.session_state:
@@ -29,4 +33,4 @@ if "subject" in st.session_state:
     col1, col2, col3 = st.columns([3, 1, 1])
     with col3:
         if st.button("➡️ 다음"):
-            st.switch_page("pages/4_3️⃣_데이터 입력.py")
+            st.switch_page("pages/8_📕_데이터분석_(3)_데이터입력.py")

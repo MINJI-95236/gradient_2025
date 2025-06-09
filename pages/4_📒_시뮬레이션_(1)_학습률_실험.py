@@ -80,7 +80,7 @@ elif st.session_state.select_action == "reset":
     st.rerun()
 
 # ---------------- UI 구성 시작 ----------------
-st.markdown("## 🔍 학습률 실습")
+st.markdown("## 📒 (1) 시뮬레이션-학습률")
 
 st.markdown("### ✅ 비교하고 싶은 학습률을 선택하세요:")
 cols = st.columns(len(learning_rates))
@@ -148,3 +148,8 @@ st.text_area(
     placeholder="예: 학습률 0.01이 가장 안정적으로 수렴함을 확인했습니다. 너무 큰 값은 발산하고, 너무 작은 값은 변화가 거의 없습니다.",
     key="final_summary"
 )
+
+col1, col2, col3 = st.columns([2, 7, 3])  # col3이 오른쪽 끝
+with col3:
+    if st.button("🏠 홈으로"):
+        st.switch_page("app.py")  # 또는 정확한 페이지 경로

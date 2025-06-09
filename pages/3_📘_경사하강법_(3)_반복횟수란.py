@@ -5,15 +5,22 @@ import platform
 
 from matplotlib import font_manager
 
+st.set_page_config(
+    page_title="📘 경사하강법 (3) 반복횟수란?",
+    page_icon="📘",
+    layout="centered"
+)
 # 프로젝트 내 폰트 경로 등록
 font_path = "./fonts/NotoSansKR-Regular.ttf"
 font_manager.fontManager.addfont(font_path)
 plt.rcParams["font.family"] = "Noto Sans KR"
 plt.rcParams["axes.unicode_minus"] = False
 
-
-
-st.title("📘 경사하강법 · 3단계: 반복횟수란?")
+st.title("📘 (2) 경사하강법-반복횟수")
+col1, col2, col3 = st.columns([2, 7, 3])  # col3이 오른쪽 끝
+with col3:
+    if st.button("🏠 홈으로"):
+        st.switch_page("app.py")  # 또는 정확한 페이지 경로
 
 st.markdown("""
 ### 🔁 반복횟수(Epochs)란?
