@@ -20,6 +20,8 @@ else:
         matplotlib.rcParams["font.family"] = "DejaVu Sans"
     font_prop = None
 matplotlib.rcParams["axes.unicode_minus"] = False
+
+st.set_page_config(page_title="요약 결과", layout="wide")
 st.markdown("""
     <style>
         html, body, [data-testid="stAppViewContainer"], .main, .block-container {
@@ -46,7 +48,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.set_page_config(page_title="요약 결과", layout="wide")
+
 st.title("\U0001F4D8 최종 요약 결과")
 
 # 1️⃣ 기본 정보 섹션
