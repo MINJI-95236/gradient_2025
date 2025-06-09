@@ -38,15 +38,32 @@ st.markdown("""
             margin-top: 12px;
         }
 
-        /* 페이지 인쇄 시 자동 색상 반전 방지 */
+        /* ✅ 페이지 인쇄 시 최적화 설정 */
         @media print {
-            body {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
+            html, body {
+                height: auto !important;
+                overflow: visible !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                zoom: 85%;  /* ✅ 한 페이지에 맞추기 위한 축소 */
+            }
+
+            .element-container {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            .stButton, .stSidebar {
+                display: none !important;  /* 버튼, 사이드바 숨김 */
+            }
+
+            .main {
+                padding: 0 !important;
             }
         }
     </style>
 """, unsafe_allow_html=True)
+
 
 
 st.title("\U0001F4D8 최종 요약 결과")
@@ -72,7 +89,7 @@ with st.container():
 
 # 2️⃣ 분석 주제
 with st.container():
-    st.markdown("### \U0001F537 선택한 분석 주제")
+    st.markdown("### 🔵 선택한 분석 주제")
     subject = st.session_state.get('subject', '정보 없음')
     st.markdown(f"""
     <div style='background-color: #f3f4f6; color: #111827;
@@ -84,7 +101,7 @@ with st.container():
 
 # 3️⃣ 입력한 데이터 및 분석
 with st.container():
-    st.markdown("### \U0001F7E2 입력한 데이터 및 분석")
+    st.markdown("### 🟣 입력한 데이터 및 분석")
 
     if 'table_data' in st.session_state:
         st.markdown("#### \U0001F4CA 입력한 데이터")
@@ -124,7 +141,7 @@ with st.container():
 
 # 5️⃣ 예측 결과 해석
 with st.container():
-    st.subheader("5️⃣ 예측 결과 및 해석")
+    st.markdown("### 🟡 예측 결과 및 해석")
 
     if 'history' in st.session_state and 'selected_model_indices' in st.session_state:
         for idx in st.session_state.selected_model_indices:
@@ -168,7 +185,7 @@ if st.session_state.show_pdf_guide:
                 font-size: 16px; color: #111827; border: 1px solid #fcd34d;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                 margin-top: 10px; transition: all 0.3s ease;'>
-        <h4 style='margin-top: 0;'>📄 요약 결과를 PDF로 저장하는 방법</h4>
+        <h4 style='margin-top: 0;'>📄 결과를 PDF로 저장하는 방법</h4>
         <ol>
             <li><strong>Ctrl + P</strong> 또는 <strong>⌘ + P</strong>를 누르세요</li>
             <li>프린터에서 <strong>PDF로 저장</strong>을 선택하세요</li>
