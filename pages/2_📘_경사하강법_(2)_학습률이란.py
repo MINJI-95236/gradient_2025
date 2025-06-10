@@ -44,22 +44,32 @@ st.markdown("""
 아래 그래프는 서로 다른 학습률이 어떤 이동을 만들어내는지 보여줍니다.
 """)
 
-# 예시 시각화
-x = np.linspace(-2, 2, 100)
-y = x**2
 
-fig, ax = plt.subplots()
-ax.plot(x, y, label="함수 y = x²", color="black")
+#학습률 이미지 추가
+from PIL import Image
+import streamlit as st
 
-# 학습률 예시 점
-lr_steps = [-1.5, -1.0, -0.5]
-ax.plot(lr_steps, [s**2 for s in lr_steps], "ro-", label="학습률 이동 예시")
+col1, col2 = st.columns(2)
+with col1:
+    img1 = Image.open("images/stepsize_test5.png").resize((400, 400))  # (width, height)
+    st.image(img1)
 
-ax.set_title("학습률에 따른 이동 예시")
-ax.set_xlabel("x")
-ax.set_ylabel("y")
-ax.legend()
-st.pyplot(fig)
+with col2:
+    img2 = Image.open("images/stepsize_test3.png").resize((400, 400))
+    st.image(img2)
+
+st.markdown("")
+
+# 두 번째 줄 - 이미지 두 개
+col3, col4 = st.columns(2)
+with col3:
+    img3 = Image.open("images/stepsize_test4.png").resize((400, 400))
+    st.image(img3)
+
+with col4:
+    img4 = Image.open("images/stepsize_test3.png").resize((400, 400))
+    st.image(img4)
+
 
 with st.sidebar:
     # 🏠 홈으로
