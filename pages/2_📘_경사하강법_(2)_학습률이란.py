@@ -55,7 +55,7 @@ with col1:
     st.image(img1)
 
 with col2:
-    img2 = Image.open("images/stepsize_test3.png").resize((400, 400))
+    img2 = Image.open("images/stepsize_test2.png").resize((400, 400))
     st.image(img2)
 
 st.markdown("")
@@ -67,7 +67,7 @@ with col3:
     st.image(img3)
 
 with col4:
-    img4 = Image.open("images/stepsize_test2.png").resize((400, 400))
+    img4 = Image.open("images/stepsize_test3.png").resize((400, 400))
     st.image(img4)
 
 

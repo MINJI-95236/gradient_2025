@@ -87,30 +87,31 @@ def gradient_descent_quadratic(x, y, lr, epochs):
 if st.button("📈 예측 실행"):
     x = np.array(x_raw)
     y = np.array(y_raw)
-    x_mean = x.mean()
-    x_centered = x - x_mean
     x_plot = np.linspace(x.min(), x.max(), 100)
-    x_input = x_plot - x_mean
 
     if func_type == "1차 함수":
+        x_mean = x.mean()
+        x_centered = x - x_mean
+        x_input = x_plot - x_mean
         m, b = gradient_descent_linear(x_centered, y, learning_rate, epoch)
         y_pred = m * x_input + b
         m_real = m
         b_real = b - m * x_mean
         equation = f"y = {m_real:.4f}x {'+' if b_real >= 0 else '-'} {abs(b_real):.4f}"
     else:
+        x_mean = x.mean()
+        x_centered = x - x_mean
+        x_input = x_plot - x_mean
         a, b, c = gradient_descent_quadratic(x_centered, y, learning_rate, epoch)
         y_pred = a * x_input**2 + b * x_input + c
         a_real = a
         b_real = b - 2 * a * x_mean
         c_real = a * x_mean**2 - b * x_mean + c
         equation = (
-        f"y = {a_real:.4f}x² "
-        f"{'+' if b_real >= 0 else '-'} {abs(b_real):.4f}x "
-        f"{'+' if c_real >= 0 else '-'} {abs(c_real):.4f}"
-        )
-
-
+            f"y = {a_real:.4f}x² "
+            f"{'+' if b_real >= 0 else '-'} {abs(b_real):.4f}x "
+            f"{'+' if c_real >= 0 else '-'} {abs(c_real):.4f}"
+            )
 
     if np.any(np.isnan(y_pred)) or np.any(np.isinf(y_pred)):
         st.error("❌ 예측 동안 오류가 발생했습니다. 학습률을 낮추거나 반복 횟수를 줄여보세요.")
