@@ -192,7 +192,7 @@ for i, run in enumerate(st.session_state.history):
     🔁 **반복 횟수**: {run['epoch']}
     """, unsafe_allow_html=True)
 
-    # ✅ 예측 수식 기반 입력값 계산창 추가 (보다 견고한 파싱)
+    # ✅ 예측 수식 기반 입력값 계산창 추가(수정 예정)
     with st.expander(f"🔍 예측 {i+1}의 수식으로 값을 예측해봅시다."):
         input_x = st.number_input(f"{x_label} 값을 입력하세요 (예: 연도)", value=int(x_raw[-1]) + 1, step=1, key=f"input_{i}")
 
@@ -232,7 +232,7 @@ if "select_all_active" not in st.session_state:
 
 if st.session_state.history:
     st.markdown("## 📌 다음 단계로 보내기")
-
+    st.info("예측 모델을 1가지 이상 선택하고 [➡️ 다음] 버튼을 누르세요!")
     if st.button("☑️ 전체 선택 / 전체 해제"):
         st.session_state.select_all_active = not st.session_state.select_all_active
         if st.session_state.select_all_active:
@@ -251,9 +251,13 @@ if st.session_state.history:
 
     st.session_state.selected_model_indices = selected
 
-    if st.button("➡️ 다음 단계로 이동"):
-        if selected:
-            st.switch_page("pages/10_📕_데이터분석_(5)_예측해석.py")
-
-        else:
-            st.warning("⚠️ 예측선을 하나 이상 선택해야 다음 단계로 이동할 수 있어요.")
+    colA, colB, colC = st.columns([3, 15, 3])
+    with colA:
+        if st.button("⬅️ 이전"):
+            st.switch_page("pages/8_📕_데이터분석_(3)_데이터입력.py")
+    with colC:
+        if st.button("➡️ 다음"):
+            if selected:
+                st.switch_page("pages/10_📕_데이터분석_(5)_예측해석.py")
+            else:
+                st.warning("⚠️ 예측선을 하나 이상 선택해야 다음 단계로 이동할 수 있어요.")

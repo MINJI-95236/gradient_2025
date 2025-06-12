@@ -66,7 +66,13 @@ if st.button("✅ 주제 저장"):
         st.warning("⚠️ 주제를 입력해주세요.")
 
 if "subject" in st.session_state:
-    col1, col2, col3 = st.columns([3, 1, 1])
+    col1, col2, col3 = st.columns([3, 15, 3])
+    with col1:
+        if st.button("⬅️ 이전"):
+            st.switch_page("pages/6_📕_데이터분석_(1)_기본정보입력.py")
     with col3:
         if st.button("➡️ 다음"):
             st.switch_page("pages/8_📕_데이터분석_(3)_데이터입력.py")
+
+
+
