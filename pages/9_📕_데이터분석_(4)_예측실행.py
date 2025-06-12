@@ -127,18 +127,23 @@ if st.button("📈 예측 실행"):
         equation = f"y = {m_real:.4f}x {'+' if b_real >= 0 else '-'} {abs(b_real):.4f}"
     else:
         x_mean = x.mean()
-        x_centered = x - x_mean
-        x_input = x_plot - x_mean
-        a, b, c = gradient_descent_quadratic(x_centered, y, learning_rate, epoch)
-        y_pred = a * x_input**2 + b * x_input + c
-        a_real = a
-        b_real = b - 2 * a * x_mean
-        c_real = a * x_mean**2 - b * x_mean + c
+        x_std = x.std()
+        x_scaled = (x - x_mean) / x_std
+        x_input_scaled = (x_plot - x_mean) / x_std
+
+        a, b, c = gradient_descent_quadratic(x_scaled, y, learning_rate, epoch)
+        y_pred = a * x_input_scaled**2 + b * x_input_scaled + c
+
+        # 정규화된 계수를 원래 X 값 기준으로 변환
+        a_real = a / (x_std**2)
+        b_real = (-2 * a * x_mean / (x_std**2)) + (b / x_std)
+        c_real = (a * x_mean**2 / (x_std**2)) - (b * x_mean / x_std) + c
+
         equation = (
             f"y = {a_real:.4f}x² "
             f"{'+' if b_real >= 0 else '-'} {abs(b_real):.4f}x "
             f"{'+' if c_real >= 0 else '-'} {abs(c_real):.4f}"
-            )
+        )
 
     if np.any(np.isnan(y_pred)) or np.any(np.isinf(y_pred)):
         st.error("❌ 예측 동안 오류가 발생했습니다. 학습률을 낮추거나 반복 횟수를 줄여보세요.")
@@ -186,6 +191,30 @@ for i, run in enumerate(st.session_state.history):
     📘 **학습률**: {run['lr']}  
     🔁 **반복 횟수**: {run['epoch']}
     """, unsafe_allow_html=True)
+
+    # ✅ 예측 수식 기반 입력값 계산창 추가 (보다 견고한 파싱)
+    with st.expander(f"🔍 예측 {i+1}의 수식으로 값을 예측해봅시다."):
+        input_x = st.number_input(f"{x_label} 값을 입력하세요 (예: 연도)", value=int(x_raw[-1]) + 1, step=1, key=f"input_{i}")
+
+        try:
+            eq = run['label'].replace("y = ", "").replace(" ", "")
+            eq = eq.replace("-", "+-").replace("x²", "x^2")
+            terms = eq.split("+")
+            a_val = b_val = c_val = 0.0
+            for term in terms:
+                if "x^2" in term:
+                    a_val = float(term.replace("x^2", ""))
+                elif "x" in term:
+                    b_val = float(term.replace("x", ""))
+                elif term:
+                    c_val = float(term)
+
+            y_input_pred = a_val * input_x**2 + b_val * input_x + c_val
+            st.success(f"📌 예측값: {y_input_pred:,.0f}")
+        except Exception as e:
+            st.warning(f"⚠️ 수식을 해석할 수 없습니다: {e}")
+
+
 
 col1, col2 = st.columns([7, 3])
 with col2:
