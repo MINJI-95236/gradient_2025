@@ -185,7 +185,7 @@ with st.container():
         for idx in st.session_state.selected_model_indices:
             model = st.session_state.history[idx]
             with st.expander(f"🔍 모델 {idx + 1} (학습률={model['lr']}, 반복횟수={model['epoch']})"):
-                st.markdown(f"**예측 수식:** `{model['label']}`")
+                st.markdown(f"**예측 수식:** {model['label']}")
 
                 fig, ax = plt.subplots(figsize=(6, 4)) 
                 ax.scatter(st.session_state.x_values, st.session_state.y_values, label="입력 데이터", color="blue")
@@ -210,27 +210,25 @@ with st.container():
     else:
         st.warning("예측 결과 정보가 부족하거나 선택된 모델이 없습니다.")
 
-# 📄 PDF 저장 안내
-if "show_pdf_guide" not in st.session_state:
-    st.session_state.show_pdf_guide = False
-
-if st.button("📄 PDF 저장 안내 보기"):
-    st.session_state.show_pdf_guide = not st.session_state.show_pdf_guide
-
-if st.session_state.show_pdf_guide:
-    st.markdown("""
-    <div style='background-color: #fef9c3; padding: 20px; border-radius: 12px;
-                font-size: 16px; color: #111827; border: 1px solid #fcd34d;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                margin-top: 10px; transition: all 0.3s ease;'>
-        <h4 style='margin-top: 0;'>📄 결과를 PDF로 저장하는 방법</h4>
-        <ol>
-            <li><strong>Ctrl + P</strong> 또는 <strong>⌘ + P</strong>를 누르세요</li>
-            <li>프린터에서 <strong>PDF로 저장</strong>을 선택하세요</li>
-            <li><em>여백 없음</em>, <em>배경 그래픽 포함</em>을 설정하면 더 보기 좋습니다</li>
-            <li><strong>저장</strong> 버튼을 눌러 완료!</li>
-        </ol>
-        <p style='margin-top: 10px;'>🔍 <strong>TIP:</strong> 예측 결과는 <em>열어둔 상태</em>로 저장하는 걸 추천해요!</p>
+st.markdown("""
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+        }
+    </style>
+    <div class="no-print" style="margin-top: 40px; display: flex; justify-content: flex-start;">
+        <form>
+            <input type="submit" value="📄 PDF로 저장하기" formaction="javascript:window.print()" style="
+                background-color: #93c5fd;
+                color: black;
+                padding: 12px 24px;
+                font-size: 16px;
+                border: 1px solid #111;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+                font-weight: bold;
+            ">
+        </form>
     </div>
-    """, unsafe_allow_html=True)
-
+""", unsafe_allow_html=True)
