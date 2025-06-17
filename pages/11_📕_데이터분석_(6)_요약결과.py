@@ -218,7 +218,7 @@ st.markdown("""
     </style>
     <div class="no-print" style="margin-top: 40px; display: flex; justify-content: flex-start;">
         <form>
-            <input type="submit" value="📄 cPDF로 저장하기" formaction="javascript:window.print()" style="
+            <input type="submit" value="📄 PDF로 저장하기" formaction="javascript:window.print()" style="
                 background-color: #93c5fd;
                 color: black;
                 padding: 12px 24px;
