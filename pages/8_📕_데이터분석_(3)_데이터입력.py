@@ -100,9 +100,8 @@ x축과 y축 이름, 데이터를 입력한 후에는 반드시 **[💾 데이�
 default_x = "예: 공부 시간"
 default_y = "예: 성적"
 
-input_x_label = st.text_input("x축 이름", value=st.session_state.get("x_label", ""), placeholder=default_x)
-input_y_label = st.text_input("y축 이름", value=st.session_state.get("y_label", ""), placeholder=default_y)
-
+input_x_label = st.text_input("x축 이름", placeholder=default_x)
+input_y_label = st.text_input("y축 이름", placeholder=default_y)
 # ✅ 컬럼명 안전 보정 함수
 def safe_column_name(label, default):
     if not label or str(label).strip() == "":
@@ -125,9 +124,6 @@ if input_x_label.strip() == "" or input_y_label.strip() == "":
     st.markdown("✅ x/y축 이름을 입력하면 아래에 표가 나타납니다.")
     st.stop()
 
-# ✅ 라벨 저장
-st.session_state.x_label = x_label
-st.session_state.y_label = y_label
 
 # ✅ 초기 테이블
 if "table_data" not in st.session_state:
