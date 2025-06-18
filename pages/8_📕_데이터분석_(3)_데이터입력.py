@@ -96,23 +96,29 @@ x축과 y축 이름, 데이터를 입력한 후에는 반드시 **[💾 데이�
 """)
 
 # ✅ x, y 라벨 입력
+# ✅ x, y 라벨 입력 (입력은 그대로 받고 내부 처리는 안전하게)
 default_x = "예: 공부 시간"
 default_y = "예: 성적"
 
-x_label = st.text_input("x축 이름", value=st.session_state.get("x_label", ""), placeholder=default_x)
-y_label = st.text_input("y축 이름", value=st.session_state.get("y_label", ""), placeholder=default_y)
+input_x_label = st.text_input("x축 이름", value=st.session_state.get("x_label", ""), placeholder=default_x)
+input_y_label = st.text_input("y축 이름", value=st.session_state.get("y_label", ""), placeholder=default_y)
 
-def sanitize_label(label: str, default: str) -> str:
-    try:
-        if not label or str(label).strip() == "" or str(label).lower() == "none":
-            return default
-        return str(label).strip()
-    except:
+# ✅ 컬럼명 안전 보정 함수
+def safe_column_name(label, default):
+    if not label or str(label).strip() == "":
         return default
+    label = str(label).strip()
+    if label.lower() == "none" or label.isnumeric():
+        return default
+    return label
 
-# 라벨 보정 적용
-x_label = sanitize_label(x_label, "X")
-y_label = sanitize_label(y_label, "Y")
+# ✅ 내부 처리용 안전한 이름으로 변환
+x_label = safe_column_name(input_x_label, "X")
+y_label = safe_column_name(input_y_label, "Y")
+
+# ✅ 세션에 저장
+st.session_state.x_label = x_label
+st.session_state.y_label = y_label
 
 # ✅ 라벨이 둘 다 없으면 아래 UI 숨기고 안내 문구만 출력
 if not x_label.strip() or not y_label.strip():
