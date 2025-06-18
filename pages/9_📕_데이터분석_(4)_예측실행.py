@@ -27,7 +27,7 @@ else:
 matplotlib.rcParams["axes.unicode_minus"] = False
 
 st.set_page_config(
-    page_title="📕 데이터분석 (4) 예측 실행",
+    page_title="데이터분석 (4) 예측 실행",
     page_icon="📕",
     layout="centered"
 )

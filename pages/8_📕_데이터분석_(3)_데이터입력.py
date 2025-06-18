@@ -25,7 +25,7 @@ else:
 matplotlib.rcParams["axes.unicode_minus"] = False
 
 st.set_page_config(
-    page_title="📕 데이터분석 (3) 데이터 입력",
+    page_title="데이터분석 (3) 데이터 입력",
     page_icon="📕",
     layout="centered"
 )
@@ -101,6 +101,18 @@ default_y = "예: 성적"
 
 x_label = st.text_input("x축 이름", value=st.session_state.get("x_label", ""), placeholder=default_x)
 y_label = st.text_input("y축 이름", value=st.session_state.get("y_label", ""), placeholder=default_y)
+
+def sanitize_label(label: str, default: str) -> str:
+    try:
+        if not label or str(label).strip() == "" or str(label).lower() == "none":
+            return default
+        return str(label).strip()
+    except:
+        return default
+
+# 라벨 보정 적용
+x_label = sanitize_label(x_label, "X")
+y_label = sanitize_label(y_label, "Y")
 
 # ✅ 라벨이 둘 다 없으면 아래 UI 숨기고 안내 문구만 출력
 if not x_label.strip() or not y_label.strip():
