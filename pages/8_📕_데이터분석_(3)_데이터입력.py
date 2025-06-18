@@ -121,7 +121,7 @@ st.session_state.x_label = x_label
 st.session_state.y_label = y_label
 
 # ✅ 라벨이 둘 다 없으면 아래 UI 숨기고 안내 문구만 출력
-if not x_label.strip() or not y_label.strip():
+if input_x_label.strip() == "" or input_y_label.strip() == "":
     st.markdown("✅ x/y축 이름을 입력하면 아래에 표가 나타납니다.")
     st.stop()
 
