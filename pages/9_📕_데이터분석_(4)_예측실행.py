@@ -59,7 +59,10 @@ with st.sidebar:
     st.markdown("## 💻 시뮬레이션")
     st.page_link("pages/4_📒_시뮬레이션_(1)_학습률_실험.py", label="(1) 학습률 실험")
     st.page_link("pages/5_📒_시뮬레이션_(2)_반복횟수_실험.py", label="(2) 반복횟수 실험")
-
+    st.markdown("---")
+    st.markdown("## 🏠 예제")
+    st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
+    
     st.markdown("---")
 
     st.markdown("## 📊 데이터분석")
