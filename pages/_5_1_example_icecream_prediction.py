@@ -77,7 +77,7 @@ st.title("🏠 나 혼자 산다! 다 혼자 산다?")
 col1, col2 = st.columns([2, 3])  # 왼쪽: 영상 / 오른쪽: 설명
 
 with col1:
-    st.image("images/1인가구메인그림.png", use_container_width=True)
+    st.image("images/fourcuttoon.png", use_container_width=True)
 
 
 with col2:
