@@ -114,12 +114,25 @@ df_input = st.data_editor(df_default, use_container_width=True, num_rows="dynami
 # 2️⃣ 산점도
 if "scatter_shown" not in st.session_state:
     st.session_state.scatter_shown = False
+# 👈🏼 버튼과 문구를 한 줄에 나란히 배치
+col_btn, col_text = st.columns([1,6])
 
-if st.button("📊 산점도 보기"):
-    if df_input.dropna().shape[0] < 2:
-        st.warning("입력된 데이터가 충분하지 않습니다. 최소 2개 이상 입력해주세요.")
-    else:
-        st.session_state.scatter_shown = True
+with col_btn:
+    if st.button("📊 산점도 보기"):
+        if df_input.dropna().shape[0] < 2:
+            st.warning("입력된 데이터가 충분하지 않습니다. 최소 2개 이상 입력해주세요.")
+        else:
+            st.session_state.scatter_shown = True
+
+with col_text:
+    st.markdown(
+        """
+        <div style='margin-top: 8px; font-size: 16px; color: #1e88e5; font-weight: 700;'>
+            👈 산점도를 통해 시각화 해볼까요?
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 if st.session_state.scatter_shown:
     valid_data = df_input.dropna()
