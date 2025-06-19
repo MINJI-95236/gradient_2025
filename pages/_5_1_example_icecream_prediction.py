@@ -10,8 +10,8 @@ import math
 
 # ✅ 페이지 설정
 st.set_page_config(
-    page_title="🍧 예제 - Q. 아이스크림을 많이 팔 수 있을까?",
-    page_icon="🍧",
+    page_title="예제 - Q. 1인 가구 비율은 어떻게 변할까?",
+    page_icon="🏠",
     layout="wide"
 )
 # 🔒 자동 생성된 사이드바 메뉴 숨기기
@@ -57,8 +57,8 @@ with st.sidebar:
     st.page_link("pages/5_📒_시뮬레이션_(2)_반복횟수_실험.py", label="(2) 반복횟수 실험")
 
     st.markdown("---")
-    st.markdown("## 🍧 예제")
-    st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 아이스크림을 많이 팔 수 있을까?")
+    st.markdown("## 🏠 예제")
+    st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 1인 가구 비율은 어떻게 변할까?")
 
     st.markdown("---")
     st.markdown("## 📊 데이터분석")
@@ -70,27 +70,45 @@ with st.sidebar:
     st.page_link("pages/11_📕_데이터분석_(6)_요약결과.py", label="(6) 요약 결과")
 
 # ✅ 본문 구성
-st.title("🍧 예제 - Q. 아이스크림을 많이 팔 수 있을까?")
-st.markdown("""
-이 예제에서는 기온과 아이스크림 판매량 간의 관계를 학습하여  
-미래의 판매량을 예측할 수 있는 모델을 직접 구성해봅니다.
-""")
+st.title("🏠 1인 가구 비율은 어떻게 변할까?")
+
+# 🎥 유튜브 영상 + 설명 (데이터 입력 섹션 위)
+
+col1, col2 = st.columns([3, 2])  # 왼쪽: 영상 / 오른쪽: 설명
+
+with col1:
+    st.video("https://youtu.be/VLAZXTo_Iug?si=Nzegs0AetdCv_IHh")
+
+with col2:
+    st.markdown("""
+    ### 📽️ 1인 가구, 얼마나 늘어날까?
+
+    우리 주변에서 1인 가구가 점점 많아지고 있다는 이야기를 많이 들어봤을 거예요.  
+    그런데 정말로 얼마나 늘어났고, 앞으로 얼마나 더 늘어날까요?
+
+    이 영상에서는 실제 데이터를 바탕으로  
+    **연도별 1인 가구 비율이 어떻게 변화해왔는지**를 확인하고,  
+    이를 바탕으로 **미래의 비율을 예측하는 과정**을 보여줍니다.
+
+    아래 표에 있는 데이터를 직접 수정하거나 새로운 값을 추가하면서,  
+    우리만의 예측 모델을 만들어볼 수 있어요!
+    """)
+
+
+st.markdown("---")
 
 # 1️⃣ 데이터 입력
 st.subheader("1️⃣ 데이터 입력")
-st.markdown("기온(℃)과 아이스크림 판매량(개)을 아래 표에 직접 입력하거나 수정해보세요.")
+st.markdown("연도와 1인 가구 비율(%)을 아래 표에 직접 입력하거나 수정해보세요.")
 
 df_default = pd.DataFrame({
-    "기온(℃)": [15.0, 15.7, 16.5, 17.2, 17.9, 18.6, 19.3, 20.0, 20.7, 21.4,
-              22.1, 22.9, 23.6, 24.3, 25.0, 25.7, 26.4, 27.1, 27.9, 28.6,
-              29.3, 30.0, 30.7, 31.4, 32.1, 32.9, 33.6, 34.3, 35.0, 35.7,
-              36.4, 37.1, 37.9, 38.6, 39.3],
-    "판매량(개)": [107, 108, 116, 124, 119, 123, 125, 136, 130, 143,
-                140, 153, 155, 147, 162, 162, 173, 169, 172, 176,
-                177, 189, 187, 195, 195, 200, 204, 204, 216, 210,
-                222, 228, 224, 225, 232]
+    "연도": [1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015,
+           2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+    "1인 가구 비율(%)": [4.8, 6.9, 9, 12.7, 15.5, 20, 23.9, 27.2,
+                  27.9, 28.6, 29.3, 30.2, 31.7, 33.4, 34.5, 35.5]
 })
 df_input = st.data_editor(df_default, use_container_width=True, num_rows="dynamic")
+
 
 # 2️⃣ 산점도
 if "scatter_shown" not in st.session_state:
@@ -104,14 +122,14 @@ if st.button("📊 산점도 보기"):
 
 if st.session_state.scatter_shown:
     valid_data = df_input.dropna()
-    valid_data = valid_data.sort_values(by="기온(℃)")
+    valid_data = valid_data.sort_values(by="연도")
     st.subheader("2️⃣ 산점도")
-    fig, ax = plt.subplots()
-    ax.scatter(valid_data["기온(℃)"], valid_data["판매량(개)"], color='blue')
-    ax.set_title("기온과 아이스크림 판매량의 관계")
-    ax.set_xlabel("기온(℃)")
-    ax.set_ylabel("판매량(개)")
-    st.pyplot(fig)
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.scatter(valid_data["연도"], valid_data["1인 가구 비율(%)"], color='blue')
+    ax.set_title("연도와 1인 가구 비율의 관계")
+    ax.set_xlabel("연도")
+    ax.set_ylabel("1인 가구 비율(%)")
+    st.pyplot(fig, use_container_width=False)
 
     # ✅ 초기 설정
 if "lr_value" not in st.session_state:
@@ -212,26 +230,32 @@ def train_model(X, y, lr, epochs):
 if st.button("📈 예측 그래프 그리기"):
     st.session_state.predict_requested = True
     if "input_temp" not in st.session_state:
-        st.session_state.input_temp = 25
+        st.session_state.input_temp = 2024
 
 # 최초 상태 설정
 if "input_temp" not in st.session_state:
-    st.session_state.input_temp = 25
+    st.session_state.input_temp = 2024
+if "prev_input_temp" not in st.session_state:
+    st.session_state.prev_input_temp = 2024
 if "predict_requested" not in st.session_state:
     st.session_state.predict_requested = False
 
 # 예측 그래프 및 슬라이더 유지 출력
-if st.session_state.predict_requested:
+if st.session_state.predict_requested or (
+    st.session_state.input_temp != st.session_state.prev_input_temp
+):
     try:
         valid_data = df_input.copy()
-        valid_data["기온(℃)"] = pd.to_numeric(valid_data["기온(℃)"], errors="coerce")
-        valid_data["판매량(개)"] = pd.to_numeric(valid_data["판매량(개)"], errors="coerce")
+        valid_data["연도"] = pd.to_numeric(valid_data["연도"], errors="coerce")
+        valid_data["1인 가구 비율(%)"] = pd.to_numeric(valid_data["1인 가구 비율(%)"], errors="coerce")
         valid_data = valid_data.dropna()
 
-        X = valid_data["기온(℃)"].values
-        y = valid_data["판매량(개)"].values
-        m, b = train_model(X, y, lr, epochs)
-        y_pred = m * X + b
+        X = valid_data["연도"].values
+        X_mean = X.mean()  # 중심화 기준
+        X_scaled = X - X_mean
+        y = valid_data["1인 가구 비율(%)"].values
+        m, b = train_model(X_scaled, y, lr, epochs)
+        y_pred = m * X_scaled + b
 
         # 발산 여부 체크
         if any([math.isnan(m), math.isnan(b), np.any(np.isnan(y_pred)), np.any(np.isinf(y_pred))]):
@@ -253,23 +277,56 @@ if st.session_state.predict_requested:
             ax.scatter(X, y, color='blue', label='실제값')
             sorted_idx = X.argsort()
             ax.plot(X[sorted_idx], y_pred[sorted_idx], color='red', label='예측값')
-            ax.set_xlabel("기온(℃)")
-            ax.set_ylabel("판매량(개)")
+            ax.set_xlabel("연도")
+            ax.set_ylabel("1인 가구 비율(%)")
             ax.legend()
             ax.set_title("예측 결과")
             st.pyplot(fig)
 
         with col2:
             st.markdown("#### 📌 예측 수식")
-            st.latex(f"y = {m:.2f} \\times x + {b:.2f}")
+            # 수식에서 사용할 계수 (정규화된 모델에서 원래 x로 복원한 것)
+            true_m = m
+            true_b = b - m * X_mean
+
+            # 이 수식을 화면에 표시
+            st.latex(f"y = {true_m:.4f} \\times x {'+' if true_b >= 0 else '-'} {abs(true_b):.2f}")
+
+
             st.markdown(f"**반복 횟수**: {epochs}회")
             st.markdown(f"**학습률**: {lr}")
-            st.markdown(f"**정확도**: {accuracy}%")
 
             # 🔁 슬라이더는 계속 유지되며 값만 갱신됨
-            input_temp = st.slider("예측하고 싶은 기온(℃)", 15, 40, value=st.session_state.input_temp)
+            input_temp = st.number_input(
+                label="예측하고 싶은 연도(예:2026)를 입력하세요",
+                min_value=1980,
+                max_value=2100,
+                value=int(st.session_state.input_temp),
+                step=1, 
+                format="%d"
+            )
+            if input_temp != st.session_state.input_temp:
+                st.session_state.input_temp = input_temp
+                st.rerun()
+                        # 1️⃣ 먼저 이전 값을 백업
+            st.session_state.prev_input_temp = st.session_state.input_temp
+
+            # 2️⃣ 그 다음에 새 값을 입력
             st.session_state.input_temp = input_temp
-            pred = m * input_temp + b
-            st.markdown(f"🌡️ 기온이 **{input_temp}℃**일 때, 판매량은 **{pred:.0f}개**입니다.")
+            input_scaled = input_temp - X_mean
+            pred = true_m * input_temp + true_b
+
+            st.markdown(f"📅 연도가 **{input_temp}년**일 때, 1인 가구 비율은 **{pred:.1f}%**입니다.")                        # 정확도 강조 표시: 정중앙, 강조 스타일
+
+            accuracy_color = "red" if accuracy >= 90 else "gray"
+            accuracy_weight = "bold" if accuracy >= 90 else "normal"
+
+            st.markdown(
+                f"""
+                <div style='text-align: center; font-size: 32px; font-weight: {accuracy_weight}; color: {accuracy_color};'>
+                    🎯 모델 정확도: {accuracy:.2f}%</div>
+                """,
+                unsafe_allow_html=True
+            )
     except Exception as e:
         st.error(f"예측에 실패했습니다: {e}")
