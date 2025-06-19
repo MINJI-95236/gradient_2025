@@ -41,7 +41,7 @@ col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     with st.container(border=True):
-        st.markdown('<div class="card-title-custom">📘 경사하강법</div>', unsafe_allow_html=True)
+        st.markdown('<div class="card-title-custom">🤖 경사하강법</div>', unsafe_allow_html=True)
         st.markdown('<hr class="card-divider-custom">', unsafe_allow_html=True)
         st.page_link("pages/1_📘_경사하강법_(1)_최적화란.py", label="(1) 최적화란?")
         st.page_link("pages/2_📘_경사하강법_(2)_학습률이란.py", label="(2) 학습률이란?")
@@ -49,7 +49,7 @@ with col1:
 
 with col2:
     with st.container(border=True):
-        st.markdown('<div class="card-title-custom">📒 시뮬레이션</div>', unsafe_allow_html=True)
+        st.markdown('<div class="card-title-custom">💻 시뮬레이션</div>', unsafe_allow_html=True)
         st.markdown('<hr class="card-divider-custom">', unsafe_allow_html=True)
         st.page_link("pages/4_📒_시뮬레이션_(1)_학습률_실험.py", label="(1) 학습률 실험")
         st.page_link("pages/5_📒_시뮬레이션_(2)_반복횟수_실험.py", label="(2) 반복횟수 실험")
@@ -58,11 +58,11 @@ with col3:
     with st.container(border=True):
         st.markdown('<div class="card-title-custom">🍧 예제</div>', unsafe_allow_html=True)
         st.markdown('<hr class="card-divider-custom">', unsafe_allow_html=True)
-        st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 아이스크림을 많이 팔 수 있을까?")
+        st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
 
 with col4:
     with st.container(border=True):
-        st.markdown('<div class="card-title-custom">📕 데이터분석</div>', unsafe_allow_html=True)
+        st.markdown('<div class="card-title-custom">📊 데이터분석</div>', unsafe_allow_html=True)
         st.markdown('<hr class="card-divider-custom">', unsafe_allow_html=True)
         st.page_link("pages/6_📕_데이터분석_(1)_기본정보입력.py", label="(1) 기본 정보 입력")
         st.page_link("pages/7_📕_데이터분석_(2)_분석주제선택.py", label="(2) 분석 주제 선택")
@@ -92,7 +92,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("## 🍧 예제")
-    st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 아이스크림을 많이 팔 수 있을까?")
+    st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
 
     st.markdown("---")
     st.markdown("## 📊 데이터분석")

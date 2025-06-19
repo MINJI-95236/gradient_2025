@@ -10,7 +10,7 @@ import math
 
 # ✅ 페이지 설정
 st.set_page_config(
-    page_title="예제 - Q. 1인 가구 비율은 어떻게 변할까?",
+    page_title="예제 - Q. 나 혼자 산다! 다 혼자 산다?",
     page_icon="🏠",
     layout="wide"
 )
@@ -58,7 +58,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("## 🏠 예제")
-    st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 1인 가구 비율은 어떻게 변할까?")
+    st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
 
     st.markdown("---")
     st.markdown("## 📊 데이터분석")
@@ -70,14 +70,15 @@ with st.sidebar:
     st.page_link("pages/11_📕_데이터분석_(6)_요약결과.py", label="(6) 요약 결과")
 
 # ✅ 본문 구성
-st.title("🏠 1인 가구 비율은 어떻게 변할까?")
+st.title("🏠 나 혼자 산다! 다 혼자 산다?")
 
-# 🎥 유튜브 영상 + 설명 (데이터 입력 섹션 위)
+# 그림 + 설명 (데이터 입력 섹션 위)
 
-col1, col2 = st.columns([3, 2])  # 왼쪽: 영상 / 오른쪽: 설명
+col1, col2 = st.columns([2, 3])  # 왼쪽: 영상 / 오른쪽: 설명
 
 with col1:
-    st.video("https://youtu.be/VLAZXTo_Iug?si=Nzegs0AetdCv_IHh")
+    st.image("images/1인가구메인그림.png", use_container_width=True)
+
 
 with col2:
     st.markdown("""
@@ -316,7 +317,7 @@ if st.session_state.predict_requested or (
             input_scaled = input_temp - X_mean
             pred = true_m * input_temp + true_b
 
-            st.markdown(f"📅 연도가 **{input_temp}년**일 때, 1인 가구 비율은 **{pred:.1f}%**입니다.")                        # 정확도 강조 표시: 정중앙, 강조 스타일
+            st.markdown(f"📅 연도가 **{input_temp}년**일 때, 1인 가구 비율은 **{pred:.1f}%**입니다.")
 
             accuracy_color = "red" if accuracy >= 90 else "gray"
             accuracy_weight = "bold" if accuracy >= 90 else "normal"
@@ -328,5 +329,34 @@ if st.session_state.predict_requested or (
                 """,
                 unsafe_allow_html=True
             )
+
     except Exception as e:
         st.error(f"예측에 실패했습니다: {e}")
+
+    st.markdown("### 🔍 당신의 분석을 선택해보세요!")
+
+    col_left, col_right = st.columns(2)
+
+    with col_left:
+        if st.button("📈 1인 가구는 점점 증가합니다.", key="increase"):
+            st.success("✅ 훌륭해요! 실제 데이터에서도 꾸준히 증가하는 추세가 나타납니다.")
+            st.markdown("""
+            <div style="background-color:#e0f7fa; padding:15px; border-radius:10px; border-left:6px solid #00acc1;">
+            <b>📌 보충 설명:</b>  
+            1인 가구 비율은 1980년 4.8%에서 2023년 35.5%까지 꾸준히 증가했어요.  
+            이는 고령화, 비혼 인구 증가, 개인의 독립적 삶 선호 등 다양한 사회적 요인과 관련되어 있어요.  
+            미래에는 더 많은 혼자 사는 사람들이 생겨날 가능성이 높습니다.
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col_right:
+        if st.button("📉 1인 가구는 점점 감소합니다.", key="decrease"):
+            st.error("❌ 다시 생각해봐요! 그래프를 보면 1인 가구 비율은 점점 증가하고 있어요.")
+            st.markdown("""
+            <div style="background-color:#fff3e0; padding:15px; border-radius:10px; border-left:6px solid #ffb74d;">
+            <b>📌 확인해볼 점:</b>  
+            그래프를 다시 한 번 살펴보세요.  
+            연도에 따라 1인 가구 비율이 거의 꾸준히 상승하고 있다는 점이 보일 거예요.  
+            사회 변화에 따라 이러한 추세는 당분간 계속될 것으로 예상됩니다.
+            </div>
+            """, unsafe_allow_html=True)
