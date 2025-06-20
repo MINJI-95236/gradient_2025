@@ -330,7 +330,10 @@ if st.session_state.predict_requested or (
             input_scaled = input_temp - X_mean
             pred = true_m * input_temp + true_b
 
-            st.markdown(f"📅 연도가 **{input_temp}년**일 때, 1인 가구 비율은 **{pred:.1f}%**입니다.")
+            st.markdown(
+                f"📅 연도가 <b>{input_temp}년</b>일 때, 1인 가구 비율은 <b>{pred:.1f}%</b>입니다.",
+                unsafe_allow_html=True
+            )
 
             accuracy_color = "red" if accuracy >= 90 else "gray"
             accuracy_weight = "bold" if accuracy >= 90 else "normal"

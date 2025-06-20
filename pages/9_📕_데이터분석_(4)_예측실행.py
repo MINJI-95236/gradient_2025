@@ -8,6 +8,8 @@ import matplotlib.ticker as ticker
 from matplotlib.ticker import MaxNLocator
 import numpy as np
 import os
+import math
+
 
 # ✅ 한글 폰트 설정
 font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
@@ -45,26 +47,20 @@ st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
 st.title("📕 (4) 예측 실행")
 with st.sidebar:
-    # 🏠 홈으로
     st.page_link("app.py", label="HOME", icon="🏠")
     st.markdown("---")
-
     st.markdown("## 🤖 경사하강법")
     st.page_link("pages/1_📘_경사하강법_(1)_최적화란.py", label="(1) 최적화란?")
     st.page_link("pages/2_📘_경사하강법_(2)_학습률이란.py", label="(2) 학습률이란?")
     st.page_link("pages/3_📘_경사하강법_(3)_반복횟수란.py", label="(3) 반복횟수란?")
-
     st.markdown("---")
-
     st.markdown("## 💻 시뮬레이션")
     st.page_link("pages/4_📒_시뮬레이션_(1)_학습률_실험.py", label="(1) 학습률 실험")
     st.page_link("pages/5_📒_시뮬레이션_(2)_반복횟수_실험.py", label="(2) 반복횟수 실험")
     st.markdown("---")
     st.markdown("## 🏠 예제")
     st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
-    
     st.markdown("---")
-
     st.markdown("## 📊 데이터분석")
     st.page_link("pages/6_📕_데이터분석_(1)_기본정보입력.py", label="(1) 기본 정보 입력")
     st.page_link("pages/7_📕_데이터분석_(2)_분석주제선택.py", label="(2) 분석 주제 선택")
@@ -72,7 +68,6 @@ with st.sidebar:
     st.page_link("pages/9_📕_데이터분석_(4)_예측실행.py", label="(4) 예측 실행")
     st.page_link("pages/10_📕_데이터분석_(5)_예측해석.py", label="(5) 예측 해석")
     st.page_link("pages/11_📕_데이터분석_(6)_요약결과.py", label="(6) 요약 결과")
-
 
 # 포함 검사
 if "x_values" not in st.session_state or "y_values" not in st.session_state:
@@ -84,125 +79,149 @@ y_raw = st.session_state.y_values
 x_label = st.session_state.get("x_label", "x")
 y_label = st.session_state.get("y_label", "y")
 
+if "lr_value" not in st.session_state:
+    st.session_state.lr_value = 0.0001
+if "epochs_value" not in st.session_state:
+    st.session_state.epochs_value = 1000
+if "predict_requested" not in st.session_state:
+    st.session_state.predict_requested = False
+
+learning_rate = st.session_state.lr_value
+epoch = st.session_state.epochs_value
+
 # 예측 파라미터 선택
 func_type = st.radio("🔢 함수 형태를 선택하세요:", ["1차 함수", "2차 함수"])
-learning_rate = st.selectbox("📘 학습률을 선택하세요:", [0.0001, 0.001, 0.01, 0.1])
-epoch = st.selectbox("🔁 반복 횟수를 선택하세요:", [100, 500, 1000, 5000, 10000])
 
-if "history" not in st.session_state:
+# 🔁 학습률 및 반복횟수 슬라이더 UI
+st.markdown("### 🔧 학습률 조절")
+lr_col1, lr_col2, lr_col3, lr_col4 = st.columns([1, 5, 1, 4])
+with lr_col1:
+    if st.button("➖", key="lr_minus"):
+        st.session_state.lr_value = max(0.0001, st.session_state.lr_value - 0.0001)
+with lr_col2:
+    new_lr = st.slider("학습률", 0.0001, 0.01, st.session_state.lr_value,
+                       step=0.0002, format="%.4f", label_visibility="collapsed")
+    st.session_state.lr_value = new_lr
+with lr_col3:
+    if st.button("➕", key="lr_plus"):
+        st.session_state.lr_value = min(0.01, st.session_state.lr_value + 0.0001)
+with lr_col4:
+    st.markdown(f"<b>현재 학습률: {st.session_state.lr_value:.4f}</b>", unsafe_allow_html=True)
+
+st.markdown("### 🔁 반복 횟수 조절")
+ep_col1, ep_col2, ep_col3, ep_col4 = st.columns([1, 5, 1, 4])
+with ep_col1:
+    if st.button("➖", key="ep_minus"):
+        st.session_state.epochs_value = max(100, st.session_state.epochs_value - 100)
+with ep_col2:
+    new_epochs = st.slider("반복 횟수", 100, 7000, st.session_state.epochs_value,
+                           step=100, label_visibility="collapsed")
+    st.session_state.epochs_value = new_epochs
+with ep_col3:
+    if st.button("➕", key="ep_plus"):
+        st.session_state.epochs_value = min(7000, st.session_state.epochs_value + 100)
+with ep_col4:
+    st.markdown(f"<b>현재 반복 횟수: {st.session_state.epochs_value}회</b>", unsafe_allow_html=True)
+
+# ✅ 예측 실행 버튼
+if st.button("📈 예측 실행"):
+    x_arr = np.array(x_raw)
+    y_arr = np.array(y_raw)
+    if len(x_arr) < 2 or np.std(x_arr) == 0 or np.any(np.isnan(x_arr)) or np.any(np.isnan(y_arr)):
+        st.session_state.predict_requested = False
+        st.error("⚠️ 예측할 수 없습니다. 입력 데이터가 너무 적거나, 모든 X값이 같거나, NaN 값이 포함되어 있습니다.")
+        st.stop()
+
+    st.session_state.predict_requested = True
     st.session_state.history = []
 
-# 경사하강법 정의
-def gradient_descent_linear(x, y, lr, epochs):
-    m, b = 0.0, 0.0
-    n = len(x)
-    for _ in range(epochs):
-        y_pred = m * x + b
-        error = y_pred - y
-        m -= lr * (2 / n) * (error @ x)
-        b -= lr * (2 / n) * error.sum()
-    return m, b
-
-def gradient_descent_quadratic(x, y, lr, epochs):
-    a, b, c = 0.0, 0.0, 0.0
-    n = len(x)
-    for _ in range(epochs):
-        y_pred = a * x**2 + b * x + c
-        error = y_pred - y
-        a -= lr * (2 / n) * (error @ (x**2))
-        b -= lr * (2 / n) * (error @ x)
-        c -= lr * (2 / n) * error.sum()
-    return a, b, c
-
-if st.button("📈 예측 실행"):
+# ✅ 예측 실행 플래그가 설정된 경우에만 실행
+if st.session_state.predict_requested:
     x = np.array(x_raw)
     y = np.array(y_raw)
     x_plot = np.linspace(x.min(), x.max(), 100)
 
     if func_type == "1차 함수":
-        x_mean = x.mean()
-        x_centered = x - x_mean
-        x_input = x_plot - x_mean
-        m, b = gradient_descent_linear(x_centered, y, learning_rate, epoch)
-        y_pred = m * x_input + b
-        m_real = m
-        b_real = b - m * x_mean
-        equation = f"y = {m_real:.4f}x {'+' if b_real >= 0 else '-'} {abs(b_real):.4f}"
+        m, b = 0.0, 0.0
+        for _ in range(epoch):
+            y_pred = m * x + b
+            error = y_pred - y
+            m -= learning_rate * (2 / len(x)) * (error @ x)
+            b -= learning_rate * (2 / len(x)) * error.sum()
+        y_pred = m * x_plot + b
+        equation = f"y = {m:.4f}x {'+' if b >= 0 else '-'} {abs(b):.4f}"
+
+
     else:
         x_mean = x.mean()
         x_std = x.std()
         x_scaled = (x - x_mean) / x_std
         x_input_scaled = (x_plot - x_mean) / x_std
-
-        a, b, c = gradient_descent_quadratic(x_scaled, y, learning_rate, epoch)
+        a = b = c = 0.0
+        for _ in range(epoch):
+            y_pred = a * x_scaled**2 + b * x_scaled + c
+            error = y_pred - y
+            a -= learning_rate * (2 / len(x)) * (error @ (x_scaled**2))
+            b -= learning_rate * (2 / len(x)) * (error @ x_scaled)
+            c -= learning_rate * (2 / len(x)) * error.sum()
         y_pred = a * x_input_scaled**2 + b * x_input_scaled + c
-
-        # 정규화된 계수를 원래 X 값 기준으로 변환
         a_real = a / (x_std**2)
         b_real = (-2 * a * x_mean / (x_std**2)) + (b / x_std)
         c_real = (a * x_mean**2 / (x_std**2)) - (b * x_mean / x_std) + c
+        equation = f"y = {a_real:.4f}x² {'+' if b_real >= 0 else '-'} {abs(b_real):.4f}x {'+' if c_real >= 0 else '-'} {abs(c_real):.4f}"
 
-        equation = (
-            f"y = {a_real:.4f}x² "
-            f"{'+' if b_real >= 0 else '-'} {abs(b_real):.4f}x "
-            f"{'+' if c_real >= 0 else '-'} {abs(c_real):.4f}"
-        )
+    ss_total = np.sum((y - y.mean()) ** 2)
 
-    if np.any(np.isnan(y_pred)) or np.any(np.isinf(y_pred)):
-        st.error("❌ 예측 동안 오류가 발생했습니다. 학습률을 낮추거나 반복 횟수를 줄여보세요.")
+    if func_type == "1차 함수":
+        y_pred_for_accuracy = m * x + b
+    else:
+        y_pred_for_accuracy = a * ((x - x_mean) / x_std)**2 + b * ((x - x_mean) / x_std) + c
+
+    ss_res = np.sum((y - y_pred_for_accuracy) ** 2)
+    r2 = 1 - ss_res / ss_total
+
+    # 예측 발산 여부 검사 (학습률이 너무 크거나 반복이 너무 많을 경우 방지)
+    if (
+        np.any(np.isnan(y_pred)) or np.any(np.isinf(y_pred)) or
+        np.isnan(ss_total) or np.isnan(ss_res) or np.isnan(r2) or
+        np.isinf(ss_total) or np.isinf(ss_res) or np.isinf(r2)
+    ):
+        st.session_state.predict_requested = False
+        st.error("❌ 예측 결과가 유효하지 않습니다.\n학습률이 너무 크거나 반복 횟수가 너무 많을 수 있습니다.\n적절한 값으로 조절해 주세요.")
         st.stop()
 
-    st.session_state.history.append({
-        "x_plot": x_plot,
-        "y_pred": y_pred,
-        "label": equation,
-        "lr": learning_rate,
-        "epoch": epoch,
-        "x_mean": x_mean
-    })
+    accuracy = round(r2 * 100, 2)
+    accuracy_color = "red" if accuracy >= 90 else "gray"
+    accuracy_weight = "bold" if accuracy >= 90 else "normal"
 
-for i, run in enumerate(st.session_state.history):
-    if i > 0:
-        st.markdown("---")
-    st.write(f"### 🔍 예측 {i+1}")
-    fig, ax = plt.subplots()
-    ax.scatter(x_raw, y_raw, color="blue", label="입력 데이터")
-    ax.plot(run["x_plot"], run["y_pred"], color="red", label="예측선")
-
-    if font_prop:
-        ax.set_title(f"예측 결과 {i+1}", fontproperties=font_prop)
-        ax.set_xlabel(x_label, fontproperties=font_prop)
-        ax.set_ylabel(y_label, fontproperties=font_prop)
-        ax.legend(prop=font_prop)
-    else:
-        ax.set_title(f"예측 결과 {i+1}")
+    col1, col2 = st.columns(2)
+    with col1:
+        fig, ax = plt.subplots()
+        ax.scatter(x, y, color="blue", label="입력 데이터")
+        ax.plot(x_plot, y_pred, color="red", label="예측선")
+        ax.set_title("예측 결과")
         ax.set_xlabel(x_label)
         ax.set_ylabel(y_label)
         ax.legend()
-
-    ax.xaxis.set_major_locator(MaxNLocator(nbins='auto', prune='both'))
-    if all(float(x).is_integer() for x in x_raw):
+        ax.xaxis.set_major_locator(MaxNLocator(nbins='auto', prune='both'))
         ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%d'))
-    else:
-        ax.xaxis.set_major_formatter(ticker.ScalarFormatter())
-    fig.tight_layout()
-    st.pyplot(fig)
+        fig.tight_layout()
+        st.pyplot(fig)
 
-    st.markdown(f"""
-    #### ✅ <span style='color:#00C851'>예측이 완료되었습니다!</span>  
-    🖋️ **수식**: {run['label']}  
-    📘 **학습률**: {run['lr']}  
-    🔁 **반복 횟수**: {run['epoch']}
-    """, unsafe_allow_html=True)
-
-    # ✅ 예측 수식 기반 입력값 계산창 추가(수정 예정)
-    with st.expander(f"🔍 예측 {i+1}의 수식으로 값을 예측해봅시다."):
-        input_x = st.number_input(f"{x_label} 값을 입력하세요 (예: 연도)", value=int(x_raw[-1]) + 1, step=1, key=f"input_{i}")
-
+    with col2:
+        st.markdown(f"🖋️ **수식**: {equation}")
+        st.markdown(f"📘 **학습률**: {learning_rate}")
+        st.markdown(f"🔁 **반복 횟수**: {epoch}")
+        st.markdown(
+            f"<div style='text-align:center; font-size:32px; font-weight:{accuracy_weight}; color:{accuracy_color};'>🎯 모델 정확도: {accuracy:.2f}%</div>",
+            unsafe_allow_html=True
+        )
+        input_x = st.number_input("예측하고 싶은 값을 입력하세요. (예: 연도, 나이, 기온 등)", value=int(x[-1]) + 1, step=1)
         try:
-            eq = run['label'].replace("y = ", "").replace(" ", "")
-            eq = eq.replace("-", "+-").replace("x²", "x^2")
-            terms = eq.split("+")
+            import re
+            eq = equation.replace("y = ", "").replace("x²", "x^2").replace(" ", "")
+            terms = re.findall(r"[+-]?\d*\.?\d+(?:x(?:\^2)?)?", eq)
+
             a_val = b_val = c_val = 0.0
             for term in terms:
                 if "x^2" in term:
@@ -211,56 +230,36 @@ for i, run in enumerate(st.session_state.history):
                     b_val = float(term.replace("x", ""))
                 elif term:
                     c_val = float(term)
+            if any([math.isnan(a_val), math.isnan(b_val), math.isnan(c_val),math.isinf(a_val), math.isinf(b_val), math.isinf(c_val)]):
+                st.warning("⚠️ 수식에 이상이 있어 예측값을 계산할 수 없습니다.\n다시 시도하거나, 학습률/반복 횟수를 조절해보세요.")
+            else:
+                y_input_pred = a_val * input_x**2 + b_val * input_x + c_val
 
-            y_input_pred = a_val * input_x**2 + b_val * input_x + c_val
-            st.success(f"📌 예측값: {y_input_pred:,.0f}")
+                if y_input_pred < 0 or y_input_pred > 100:
+                    st.warning(f"⚠️ 예측값이 비정상적입니다: {y_input_pred:.1f}%\n학습률이나 반복 횟수를 조정해보세요.")
+                else:
+                    st.success(f"📌 예측값: {y_input_pred:,.1f}%")
+
+
+
+            st.session_state.history.append({
+                "x_plot": x_plot,
+                "y_pred": y_pred,
+                "label": equation,
+                "lr": learning_rate,
+                "epoch": epoch,
+                "x_mean": x_mean,
+                "predicted_value": y_input_pred,
+                "input_value": input_x
+            })
+            
         except Exception as e:
             st.warning(f"⚠️ 수식을 해석할 수 없습니다: {e}")
 
-
-
-col1, col2 = st.columns([7, 3])
-with col2:
-    if st.button("❌ 모든 예측 결과 삭제"):
-        st.session_state.history = []
-        st.session_state.selected_model_indices = []
-        st.success("✅ 모든 예측 결과가 초기화되었습니다.")
-        st.rerun()
-
-if "selected_model_indices" not in st.session_state:
-    st.session_state.selected_model_indices = []
-
-if "select_all_active" not in st.session_state:
-    st.session_state.select_all_active = False
-
-if st.session_state.history:
-    st.markdown("## 📌 다음 단계로 보내기")
-    st.info("예측 모델을 1가지 이상 선택하고 [➡️ 다음] 버튼을 누르세요!")
-    if st.button("☑️ 전체 선택 / 전체 해제"):
-        st.session_state.select_all_active = not st.session_state.select_all_active
-        if st.session_state.select_all_active:
-            st.session_state.selected_model_indices = list(range(len(st.session_state.history)))
-        else:
-            st.session_state.selected_model_indices = []
-        st.rerun()
-
-    selected = []
-    for i, run in enumerate(st.session_state.history):
-        label = f"예측 {i+1}: {run['label']}"
-        default_checked = i in st.session_state.selected_model_indices
-        checked = st.checkbox(label, value=default_checked, key=f"check_{i}")
-        if checked:
-            selected.append(i)
-
-    st.session_state.selected_model_indices = selected
-
-    colA, colB, colC = st.columns([3, 15, 3])
+    colA, colB, colC = st.columns([3, 1, 3])
     with colA:
-        if st.button("⬅️ 이전"):
+        if st.button("⬅️ 이전", key="go_back"):
             st.switch_page("pages/8_📕_데이터분석_(3)_데이터입력.py")
     with colC:
-        if st.button("➡️ 다음"):
-            if selected:
-                st.switch_page("pages/10_📕_데이터분석_(5)_예측해석.py")
-            else:
-                st.warning("⚠️ 예측선을 하나 이상 선택해야 다음 단계로 이동할 수 있어요.")
+        if st.button("➡️ 다음", key="go_summary"):
+            st.switch_page("pages/11_📕_데이터분석_(6)_요약결과.py")  # 여기에 기존 예측 실행 전체 로직을 붙이면 됩니다.

@@ -2,35 +2,35 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
 import platform
-
 from matplotlib import font_manager
+from sklearn.metrics import r2_score
 
 st.set_page_config(
     page_title="📘 경사하강법 (3) 반복횟수란?",
     page_icon="📘",
     layout="centered"
 )
-# 프로젝트 내 폰트 경로 등록
+
+# ✅ 한글 폰트 설정
 font_path = "./fonts/NotoSansKR-Regular.ttf"
 font_manager.fontManager.addfont(font_path)
 plt.rcParams["font.family"] = "Noto Sans KR"
 plt.rcParams["axes.unicode_minus"] = False
 
-# 🔒 자동 생성된 사이드바 메뉴 숨기기
-hide_default_sidebar = """
+# 🔒 사이드바 숨기기
+st.markdown("""
     <style>
     [data-testid="stSidebarNav"] {
         display: none;
     }
     </style>
-"""
-st.markdown(hide_default_sidebar, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
-st.title("📘 (2) 경사하강법-반복횟수")
-col1, col2, col3 = st.columns([2, 7, 3])  # col3이 오른쪽 끝
+st.title("📘 (3) 경사하강법 - 반복횟수")
+col1, col2, col3 = st.columns([2, 7, 3])
 with col3:
     if st.button("🏠 홈으로"):
-        st.switch_page("app.py")  # 또는 정확한 페이지 경로
+        st.switch_page("app.py")
 
 st.markdown("""
 ### 🔁 반복횟수(Epochs)란?
@@ -44,7 +44,7 @@ st.markdown("""
 아래 그래프는 반복횟수(epoch)에 따라 예측선이 어떻게 변하는지를 보여줍니다.
 """)
 
-# 데이터 및 함수 정의
+# ✅ 데이터 생성
 np.random.seed(42)
 x = np.linspace(1, 10, 20)
 y = 2 * x + 1 + np.random.normal(0, 1, size=len(x))
@@ -52,8 +52,9 @@ y = 2 * x + 1 + np.random.normal(0, 1, size=len(x))
 x_mean = np.mean(x)
 x_centered = x - x_mean
 x_input = np.linspace(min(x), max(x), 100)
-x_plot = x_input - x_mean
+x_input_centered = x_input - x_mean
 
+# ✅ 경사하강법
 def gradient_descent(x, y, lr, epochs):
     m, b = 0, 0
     n = len(x)
@@ -65,26 +66,39 @@ def gradient_descent(x, y, lr, epochs):
         b -= lr * db
     return m, b
 
-# 반복횟수별 결과 시각화
-learning_rate = 0.001  # 고정 학습률
-epoch_list = [1, 10, 100, 1000]
-
+# ✅ 시각화
+learning_rate = 0.005
+epoch_list = [10, 100, 400, 1000]
+colors = ["purple", "green", "orange", "brown"]
 fig, ax = plt.subplots()
-ax.scatter(x, y, color="black", label="입력 데이터")
+ax.scatter(x, y, color="blue", label="입력 데이터")
 
-for epoch in epoch_list:
+# 정확도 저장용 텍스트
+accuracy_text = ""
+
+for epoch, color in zip(epoch_list, colors):
     m, b = gradient_descent(x_centered, y, learning_rate, epoch)
-    y_pred = m * x_input + b
-    ax.plot(x_plot + x_mean, y_pred, label=f"{epoch}회 반복")
+    y_pred = m * x_input_centered + b
+    ax.plot(x_input, y_pred, label=f"{epoch}회 반복", color=color, linestyle='-', linewidth=2)
+    # 정확도(R²) 계산
+    y_train_pred = m * x_centered + b
+    r2 = r2_score(y, y_train_pred)
+    accuracy_percent = round(r2 * 100)
+    accuracy_text += f"🔁 {epoch}회 반복: 정확도 = {accuracy_percent}%\n"
 
 ax.set_title("반복횟수에 따른 예측선 변화")
 ax.set_xlabel("x")
 ax.set_ylabel("y")
-ax.legend()
+ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1.0))
 st.pyplot(fig)
 
+# ✅ 정확도 텍스트 출력
+st.markdown("### 📈 반복횟수별 정확도")
+st.code(accuracy_text, language="markdown")
+
+
+# ✅ 사이드바 메뉴
 with st.sidebar:
-    # 🏠 홈으로
     st.page_link("app.py", label="HOME", icon="🏠")
     st.markdown("---")
 
@@ -94,16 +108,15 @@ with st.sidebar:
     st.page_link("pages/3_📘_경사하강법_(3)_반복횟수란.py", label="(3) 반복횟수란?")
 
     st.markdown("---")
-
     st.markdown("## 💻 시뮬레이션")
     st.page_link("pages/4_📒_시뮬레이션_(1)_학습률_실험.py", label="(1) 학습률 실험")
     st.page_link("pages/5_📒_시뮬레이션_(2)_반복횟수_실험.py", label="(2) 반복횟수 실험")
+
     st.markdown("---")
     st.markdown("## 🏠 예제")
     st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
-    
-    st.markdown("---")
 
+    st.markdown("---")
     st.markdown("## 📊 데이터분석")
     st.page_link("pages/6_📕_데이터분석_(1)_기본정보입력.py", label="(1) 기본 정보 입력")
     st.page_link("pages/7_📕_데이터분석_(2)_분석주제선택.py", label="(2) 분석 주제 선택")
