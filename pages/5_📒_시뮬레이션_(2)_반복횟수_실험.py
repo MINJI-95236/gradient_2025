@@ -1,3 +1,4 @@
+import pandas as pd
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
@@ -35,10 +36,12 @@ st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
 
 # ---------------- 데이터 및 설정 ----------------
-np.random.seed(42)
-x = np.linspace(0, 20, 20)
-noise = np.random.normal(0, 2.0, size=len(x))
-y = 5 * x + 10 + noise
+import pandas as pd
+
+df = pd.read_csv("data/data_epoch.csv")  # 경로에 맞게 수정
+x = df["x"].values
+y = df["y"].values
+
 
 x_mean = np.mean(x)
 x_centered = x - x_mean
@@ -132,11 +135,11 @@ if st.session_state.draw_graph_epochs and "selected_epochs_snapshot" in st.sessi
     for i, ep in enumerate(st.session_state.selected_epochs_snapshot):
         with tabs[i]:
             m, b = gradient_descent(x_centered, y, fixed_learning_rate, ep)
-            y_pred = m * x_input + b
+            y_pred = m * x_plot + b
 
             fig, ax = plt.subplots()
             ax.scatter(x, y, color="blue", label="입력 데이터")
-            ax.plot(x_plot + x_mean, y_pred, color="red", label=f"예측선 (반복횟수={ep})")
+            ax.plot(x_input, y_pred, color="red", label=f"예측선 (반복횟수={ep})")
             if font_prop:
                 ax.set_title(f"반복횟수 {ep}회에 대한 예측 결과", fontproperties=font_prop)
                 ax.set_xlabel("x", fontproperties=font_prop)
