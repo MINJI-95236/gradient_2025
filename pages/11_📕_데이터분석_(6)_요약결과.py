@@ -5,6 +5,8 @@ import platform
 import matplotlib.font_manager as fm
 import matplotlib
 import os
+import numpy as np
+
 
 st.set_page_config(
     page_title="데이터분석 (6) 요약 결과",
@@ -104,8 +106,7 @@ with st.sidebar:
     st.page_link("pages/7_📕_데이터분석_(2)_분석주제선택.py", label="(2) 분석 주제 선택")
     st.page_link("pages/8_📕_데이터분석_(3)_데이터입력.py", label="(3) 데이터 입력")
     st.page_link("pages/9_📕_데이터분석_(4)_예측실행.py", label="(4) 예측 실행")
-    st.page_link("pages/10_📕_데이터분석_(5)_예측해석.py", label="(5) 예측 해석")
-    st.page_link("pages/11_📕_데이터분석_(6)_요약결과.py", label="(6) 요약 결과")
+    st.page_link("pages/11_📕_데이터분석_(6)_요약결과.py", label="(5) 요약 결과")
 
 st.title("📕 (6) 요약 결과")
 
@@ -140,23 +141,17 @@ with st.container():
     </div>
     """, unsafe_allow_html=True)
 
+st.divider()
+
 # 3️⃣ 입력한 데이터 및 분석
-with st.container():
-    st.markdown("### 🟣 입력한 데이터 및 분석")
+if 'x_values' in st.session_state and 'y_values' in st.session_state:
+    st.markdown("### 🟣 산점도 그래프 & 분석 내용")
 
-    if 'table_data' in st.session_state:
-        st.markdown("#### \U0001F4CA 입력한 데이터")
-        display_df = st.session_state.table_data.rename(columns={
-            "x": st.session_state.get("x_label", "x"),
-            "y": st.session_state.get("y_label", "y")
-        })
-        st.dataframe(display_df, use_container_width=True)
-    else:
-        st.warning("입력된 데이터가 없습니다.")
+    col1, col2 = st.columns([3, 2])  # 비율 조정 가능 (2:3 또는 1:1 등)
 
-    if 'x_values' in st.session_state and 'y_values' in st.session_state:
-        st.markdown("#### \U0001F4C8 산점도 그래프")
-        fig, ax = plt.subplots(figsize=(6, 4)) 
+    # 🔹 왼쪽: 산점도 그래프
+    with col1:
+        fig, ax = plt.subplots(figsize=(5.5, 4))
         ax.scatter(st.session_state.x_values, st.session_state.y_values, color='blue')
         if font_prop:
             ax.set_xlabel(st.session_state.get("x_label", "x"), fontproperties=font_prop)
@@ -165,53 +160,87 @@ with st.container():
             ax.set_xlabel(st.session_state.get("x_label", "x"))
             ax.set_ylabel(st.session_state.get("y_label", "y"))
         st.pyplot(fig)
-    else:
-        st.warning("산점도 데이터를 불러올 수 없습니다.")
 
-    if 'analysis_text' in st.session_state:
-        st.markdown(f"""
-        <div style='background-color: #f9fafb; padding: 18px 20px; border-radius: 10px;
-                    font-size: 16px; line-height: 1.6; color: #111827;
-                    border: 1px solid #e5e7eb; margin-top: 20px;'>
-            <div style='font-weight: 600; font-size: 18px; margin-bottom: 10px;'>✏️ 분석 내용</div>
-            {st.session_state.analysis_text}
-        </div>
-        """, unsafe_allow_html=True)
-    else:
-        st.info("분석 내용이 없습니다.")
+    # 🔹 오른쪽: 분석 결과 텍스트
+    with col2:
+        if 'analysis_text' in st.session_state:
+            st.markdown(f"""
+            <div style='background-color: #f9fafb; padding: 18px 20px; border-radius: 10px;
+                        font-size: 16px; line-height: 1.6; color: #111827;
+                        border: 1px solid #e5e7eb;margin-top: 32px;'>
+                <div style='font-weight: 600; font-size: 18px; margin-bottom: 10px;'>✏️ 분석 내용</div>
+                {st.session_state.analysis_text}
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.info("분석 내용이 없습니다.")
 
-# 5️⃣ 예측 결과 해석
+st.divider()
 with st.container():
-    st.markdown("### 🟡 예측 결과 및 해석")
+    st.markdown("### 🟢 최종 예측 요약")
 
     if 'history' in st.session_state and 'selected_model_indices' in st.session_state:
-        for idx in st.session_state.selected_model_indices:
-            model = st.session_state.history[idx]
-            with st.expander(f"🔍 모델 {idx + 1} (학습률={model['lr']}, 반복횟수={model['epoch']})"):
-                st.markdown(f"**예측 수식:** {model['label']}")
+        final_idx = st.session_state.selected_model_indices[-1]
+        model = st.session_state.history[final_idx]
 
-                fig, ax = plt.subplots(figsize=(6, 4)) 
-                ax.scatter(st.session_state.x_values, st.session_state.y_values, label="입력 데이터", color="blue")
-                ax.plot(model["x_plot"], model["y_pred"], label="예측 선", color="red")
-                if font_prop:
-                    ax.set_xlabel(st.session_state.get("x_label", "x"), fontproperties=font_prop)
-                    ax.set_ylabel(st.session_state.get("y_label", "y"), fontproperties=font_prop)
-                else:
-                    ax.set_xlabel(st.session_state.get("x_label", "x"))
-                    ax.set_ylabel(st.session_state.get("y_label", "y"))
-                ax.legend()
-                st.pyplot(fig)
+        # ✅ 정확도 계산
+        y_true = np.array(st.session_state.y_values)
+        y_pred = np.array(model['y_pred'][-len(y_true):])
+        ss_total = np.sum((y_true - np.mean(y_true))**2)
+        ss_res = np.sum((y_true - y_pred)**2)
+        accuracy = model.get("accuracy", round((1 - ss_res / ss_total) * 100, 2))
 
-                reflection = st.session_state.get(f"reflection_{idx}", "해석 내용 없음")
-                st.markdown(f"""
-                <div style='background-color: #f3f4f6; padding: 15px 20px; border-radius: 10px;
-                            font-size: 16px; color: #111827; margin-top: 20px; margin-bottom: 30px;'>
-                    <strong>✏️ 예측 해석</strong><br><br>
-                    {reflection}
+        col1, col2 = st.columns([3, 2])
+
+        with col1:
+            st.markdown("#### 📈 예측 결과 그래프")
+            fig, ax = plt.subplots(figsize=(6, 4))
+            ax.scatter(st.session_state.x_values, st.session_state.y_values, label="입력 데이터", color="blue")
+            ax.plot(model["x_plot"], model["y_pred"], label="예측 선", color="red")
+            if font_prop:
+                ax.set_xlabel(st.session_state.get("x_label", "x"), fontproperties=font_prop)
+                ax.set_ylabel(st.session_state.get("y_label", "y"), fontproperties=font_prop)
+            else:
+                ax.set_xlabel(st.session_state.get("x_label", "x"))
+                ax.set_ylabel(st.session_state.get("y_label", "y"))
+            ax.legend()
+            st.pyplot(fig)
+
+        with col2:
+            acc_color = "red" if accuracy >= 90 else "gray"
+            acc_weight = "bold" if accuracy >= 90 else "normal"
+
+            
+            st.markdown(f"""
+                <div style="margin-top: 80px; line-height: 1.8; font-size: 18px; color: #111827;">
+                <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">🧮 예측 수식</div>
+                <div style="font-size: 18px; color: #111827; margin-bottom: 16px;">
+                    {model['label']}
                 </div>
-                """, unsafe_allow_html=True)
+            </div>
+            """, unsafe_allow_html=True)
+
+# 나머지는 개별 마크다운
+            st.markdown(f"""<span style="font-size: 18px;font-weight: bold;">📘 <strong>학습률:</strong> {model['lr']}</span>""", unsafe_allow_html=True)
+            st.markdown(f"""<span style="font-size: 18px;font-weight: bold;">🔁 <strong>반복 횟수:</strong> {model['epoch']}</span>""", unsafe_allow_html=True)
+            st.markdown(f"""
+                <span style="font-size: 18px;">
+                🎯 <strong>정확도:</strong>
+                <span style="color:{acc_color}; font-weight:{acc_weight};">{accuracy:.2f}%</span>
+                </span>
+            """, unsafe_allow_html=True)
+
+
     else:
-        st.warning("예측 결과 정보가 부족하거나 선택된 모델이 없습니다.")
+        st.info("최종 예측 정보가 없습니다.")
+    if 'predict_summary' in st.session_state:
+        st.markdown(f"""
+        <div style='background-color: #fefce8; padding: 18px 20px; border-radius: 10px;
+                    border: 1px solid #fde68a; margin-top: 20px;'>
+            <div style='font-weight: 600; font-size: 17px;'>✏️ 예측 결과 해석</div>
+            <div>{st.session_state.predict_summary}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 st.markdown("""
     <style>
@@ -235,3 +264,4 @@ st.markdown("""
         </form>
     </div>
 """, unsafe_allow_html=True)
+

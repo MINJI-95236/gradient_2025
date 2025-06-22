@@ -66,8 +66,7 @@ with st.sidebar:
     st.page_link("pages/7_📕_데이터분석_(2)_분석주제선택.py", label="(2) 분석 주제 선택")
     st.page_link("pages/8_📕_데이터분석_(3)_데이터입력.py", label="(3) 데이터 입력")
     st.page_link("pages/9_📕_데이터분석_(4)_예측실행.py", label="(4) 예측 실행")
-    st.page_link("pages/10_📕_데이터분석_(5)_예측해석.py", label="(5) 예측 해석")
-    st.page_link("pages/11_📕_데이터분석_(6)_요약결과.py", label="(6) 요약 결과")
+    st.page_link("pages/11_📕_데이터분석_(6)_요약결과.py", label="(5) 요약 결과")
 
 # 포함 검사
 if "x_values" not in st.session_state or "y_values" not in st.session_state:
@@ -89,8 +88,25 @@ if "predict_requested" not in st.session_state:
 learning_rate = st.session_state.lr_value
 epoch = st.session_state.epochs_value
 
-# 예측 파라미터 선택
-func_type = st.radio("🔢 함수 형태를 선택하세요:", ["1차 함수", "2차 함수"])
+st.markdown("""
+    <style>
+    .custom-radio-label h4 {
+        margin-bottom: 0.2rem;
+    }
+    div[data-testid="stRadio"] > div {
+        margin-top: -10px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# 제목과 라디오 버튼
+with st.container():
+    st.markdown("### 📈 함수 형태를 선택하세요")
+    func_type = st.radio(
+        "", ["1차 함수", "2차 함수"],
+        horizontal=True,
+        label_visibility="collapsed"
+    )
 
 # 🔁 학습률 및 반복횟수 슬라이더 UI
 st.markdown("### 🔧 학습률 조절")
@@ -137,6 +153,8 @@ if st.button("📈 예측 실행"):
 
 # ✅ 예측 실행 플래그가 설정된 경우에만 실행
 if st.session_state.predict_requested:
+    st.divider() # ✅ 구분선
+    st.markdown("### 📊 예측 결과")
     x = np.array(x_raw)
     y = np.array(y_raw)
     x_plot = np.linspace(x.min(), x.max(), 100)
@@ -193,7 +211,7 @@ if st.session_state.predict_requested:
     accuracy = round(r2 * 100, 2)
     accuracy_color = "red" if accuracy >= 90 else "gray"
     accuracy_weight = "bold" if accuracy >= 90 else "normal"
-
+    
     col1, col2 = st.columns(2)
     with col1:
         fig, ax = plt.subplots()
@@ -217,31 +235,26 @@ if st.session_state.predict_requested:
             unsafe_allow_html=True
         )
         input_x = st.number_input("예측하고 싶은 값을 입력하세요. (예: 연도, 나이, 기온 등)", value=int(x[-1]) + 1, step=1)
+
         try:
-            import re
-            eq = equation.replace("y = ", "").replace("x²", "x^2").replace(" ", "")
-            terms = re.findall(r"[+-]?\d*\.?\d+(?:x(?:\^2)?)?", eq)
-
-            a_val = b_val = c_val = 0.0
-            for term in terms:
-                if "x^2" in term:
-                    a_val = float(term.replace("x^2", ""))
-                elif "x" in term:
-                    b_val = float(term.replace("x", ""))
-                elif term:
-                    c_val = float(term)
-            if any([math.isnan(a_val), math.isnan(b_val), math.isnan(c_val),math.isinf(a_val), math.isinf(b_val), math.isinf(c_val)]):
-                st.warning("⚠️ 수식에 이상이 있어 예측값을 계산할 수 없습니다.\n다시 시도하거나, 학습률/반복 횟수를 조절해보세요.")
+            # ✅ 수식 기반 직접 예측
+            if func_type == "1차 함수":
+                y_input_pred = m * input_x + b
             else:
-                y_input_pred = a_val * input_x**2 + b_val * input_x + c_val
+                y_input_pred = a_real * input_x**2 + b_real * input_x + c_real
 
-                if y_input_pred < 0 or y_input_pred > 100:
-                    st.warning(f"⚠️ 예측값이 비정상적입니다: {y_input_pred:.1f}%\n학습률이나 반복 횟수를 조정해보세요.")
-                else:
-                    st.success(f"📌 예측값: {y_input_pred:,.1f}%")
+            # ✅ 유효 범위 내 예측값인지 확인
+            y_min, y_max = y.min(), y.max()
+            y_range = y_max - y_min
+            margin = 0.5
+            lower_bound = y_min - y_range * margin
+            upper_bound = y_max + y_range * margin
 
-
-
+            if y_input_pred < lower_bound or y_input_pred > upper_bound:
+                st.warning(f"⚠️ 예측값이 비정상적입니다: {y_input_pred:.1f}\n학습률이나 반복 횟수를 조정해보세요.")
+            else:
+                st.success(f"📌 예측값: {y_input_pred:,.1f}")
+            
             st.session_state.history.append({
                 "x_plot": x_plot,
                 "y_pred": y_pred,
@@ -250,16 +263,29 @@ if st.session_state.predict_requested:
                 "epoch": epoch,
                 "x_mean": x_mean,
                 "predicted_value": y_input_pred,
-                "input_value": input_x
+                "input_value": input_x,
+                "accuracy": accuracy
             })
-            
-        except Exception as e:
-            st.warning(f"⚠️ 수식을 해석할 수 없습니다: {e}")
+            st.session_state.selected_model_indices = [len(st.session_state.history) - 1]
 
-    colA, colB, colC = st.columns([3, 1, 3])
+
+        except Exception as e:
+            st.warning(f"⚠️ 예측값 계산 중 오류가 발생했습니다: {e}")
+    st.markdown("### 📘 예측 결과 해석")
+    if "predict_summary" not in st.session_state:
+        st.session_state.predict_summary = ""
+
+    predict_text = st.text_area(
+    label="예측 결과와 수식을 바탕으로 어떤 의미 있는 결론을 도출할 수 있었나요?",
+    placeholder="예: 예측 수식에 따르면 2025년에는 약 35% 수준까지 감소할 것으로 보입니다...",
+    key="predict_summary_input",
+    height=150
+)
+    colA, colB, colC = st.columns([3, 15, 3])
     with colA:
         if st.button("⬅️ 이전", key="go_back"):
             st.switch_page("pages/8_📕_데이터분석_(3)_데이터입력.py")
     with colC:
         if st.button("➡️ 다음", key="go_summary"):
-            st.switch_page("pages/11_📕_데이터분석_(6)_요약결과.py")  # 여기에 기존 예측 실행 전체 로직을 붙이면 됩니다.
+            st.session_state["predict_summary"] = predict_text  # 수동으로 저장
+            st.switch_page("pages/11_📕_데이터분석_(6)_요약결과.py")
