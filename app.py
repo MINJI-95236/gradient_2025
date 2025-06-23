@@ -58,7 +58,26 @@ with col3:
     with st.container(border=True):
         st.markdown('<div class="card-title-custom">🍧 예제</div>', unsafe_allow_html=True)
         st.markdown('<hr class="card-divider-custom">', unsafe_allow_html=True)
-        st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
+
+        st.markdown(
+            """
+            <a href="/5_1_example_icecream_prediction" target="_self" style="
+                display: block;
+                font-weight: 500;
+                line-height: 1.6;
+                margin-bottom: 12px;
+                color: inherit;
+                text-decoration: none;
+                cursor: pointer;
+            ">
+                Q. 나 혼자 산다!<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;다 혼자 산다?
+            </a>
+            """,
+            unsafe_allow_html=True
+        )
+
+
 
 with col4:
     with st.container(border=True):

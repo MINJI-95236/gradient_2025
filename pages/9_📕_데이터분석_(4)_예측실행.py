@@ -250,27 +250,32 @@ if st.session_state.predict_requested:
             lower_bound = y_min - y_range * margin
             upper_bound = y_max + y_range * margin
 
-            if y_input_pred < lower_bound or y_input_pred > upper_bound:
-                st.warning(f"⚠️ 예측값이 비정상적입니다: {y_input_pred:.1f}\n학습률이나 반복 횟수를 조정해보세요.")
+            if accuracy < 70 and (y_input_pred < lower_bound or y_input_pred > upper_bound):
+                st.warning(f"⚠️ 예측값이 입력한 데이터의 범위를 벗어났습니다: {y_input_pred:.1f}\n\n학습률이나 반복 횟수를 조정해보세요.")
             else:
                 st.success(f"📌 예측값: {y_input_pred:,.1f}")
             
-            st.session_state.history.append({
+            entry = {
                 "x_plot": x_plot,
                 "y_pred": y_pred,
                 "label": equation,
                 "lr": learning_rate,
                 "epoch": epoch,
-                "x_mean": x_mean,
                 "predicted_value": y_input_pred,
                 "input_value": input_x,
                 "accuracy": accuracy
-            })
+            }
+
+            if func_type == "2차 함수":
+                entry["x_mean"] = x_mean
+                entry["x_std"] = x_std
+
+            st.session_state.history.append(entry)
             st.session_state.selected_model_indices = [len(st.session_state.history) - 1]
 
 
         except Exception as e:
-            st.warning(f"⚠️ 예측값 계산 중 오류가 발생했습니다: {e}")
+            st.warning("⚠️ 예측값 계산 중 문제가 발생했습니다. 입력값 또는 설정을 다시 확인해주세요.")
     st.markdown("### 📘 예측 결과 해석")
     if "predict_summary" not in st.session_state:
         st.session_state.predict_summary = ""
