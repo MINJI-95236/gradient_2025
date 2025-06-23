@@ -63,7 +63,6 @@ with col3:
             """
             <a href="/5_1_example_icecream_prediction" target="_self" style="
                 display: block;
-                font-weight: 500;
                 line-height: 1.6;
                 margin-bottom: 12px;
                 color: inherit;
