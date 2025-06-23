@@ -84,6 +84,8 @@ if "epochs_value" not in st.session_state:
     st.session_state.epochs_value = 1000
 if "predict_requested" not in st.session_state:
     st.session_state.predict_requested = False
+if "attempt_count" not in st.session_state:  # ✅ 시도 횟수 초기화
+    st.session_state.attempt_count = 0
 
 learning_rate = st.session_state.lr_value
 epoch = st.session_state.epochs_value
@@ -145,11 +147,12 @@ if st.button("📈 예측 실행"):
     y_arr = np.array(y_raw)
     if len(x_arr) < 2 or np.std(x_arr) == 0 or np.any(np.isnan(x_arr)) or np.any(np.isnan(y_arr)):
         st.session_state.predict_requested = False
-        st.error("⚠️ 예측할 수 없습니다. 입력 데이터가 너무 적거나, 모든 X값이 같거나, NaN 값이 포함되어 있습니다.")
+        st.error("⚠️ 예측할 수 없습니다. 입력 데이터가 너무 적거나, 모든 X값이 같거나, 결츠치가 포함되어 있습니다.")
         st.stop()
 
     st.session_state.predict_requested = True
     st.session_state.history = []
+    st.session_state.attempt_count += 1  # ✅ 시도 횟수 증가
 
 # ✅ 예측 실행 플래그가 설정된 경우에만 실행
 if st.session_state.predict_requested:
@@ -160,14 +163,25 @@ if st.session_state.predict_requested:
     x_plot = np.linspace(x.min(), x.max(), 100)
 
     if func_type == "1차 함수":
+        x_mean = x.mean()
+        x_std = x.std()
+        x_scaled = (x - x_mean) / x_std
+        x_plot_scaled = (x_plot - x_mean) / x_std
+
         m, b = 0.0, 0.0
         for _ in range(epoch):
-            y_pred = m * x + b
+            y_pred = m * x_scaled + b
             error = y_pred - y
-            m -= learning_rate * (2 / len(x)) * (error @ x)
+            m -= learning_rate * (2 / len(x)) * (error @ x_scaled)
             b -= learning_rate * (2 / len(x)) * error.sum()
-        y_pred = m * x_plot + b
-        equation = f"y = {m:.4f}x {'+' if b >= 0 else '-'} {abs(b):.4f}"
+
+# 예측선
+            y_pred = m * x_plot_scaled + b
+
+            # 실제 해석 가능한 수식으로 변환
+            m_real = m / x_std
+            b_real = -m * x_mean / x_std + b
+            equation = f"y = {m_real:.4f}x {'+' if b_real >= 0 else '-'} {abs(b_real):.4f}"
 
 
     else:
@@ -191,7 +205,8 @@ if st.session_state.predict_requested:
     ss_total = np.sum((y - y.mean()) ** 2)
 
     if func_type == "1차 함수":
-        y_pred_for_accuracy = m * x + b
+        x_scaled = (x - x.mean()) / x.std()
+        y_pred_for_accuracy = m * x_scaled + b
     else:
         y_pred_for_accuracy = a * ((x - x_mean) / x_std)**2 + b * ((x - x_mean) / x_std) + c
 
@@ -227,6 +242,7 @@ if st.session_state.predict_requested:
         st.pyplot(fig)
 
     with col2:
+        st.markdown(f"🔍 예측 시도 횟수: {st.session_state.attempt_count}회")
         st.markdown(f"🖋️ **수식**: {equation}")
         st.markdown(f"📘 **학습률**: {learning_rate}")
         st.markdown(f"🔁 **반복 횟수**: {epoch}")
@@ -239,7 +255,7 @@ if st.session_state.predict_requested:
         try:
             # ✅ 수식 기반 직접 예측
             if func_type == "1차 함수":
-                y_input_pred = m * input_x + b
+                y_input_pred = m_real * input_x + b_real
             else:
                 y_input_pred = a_real * input_x**2 + b_real * input_x + c_real
 
@@ -263,7 +279,9 @@ if st.session_state.predict_requested:
                 "epoch": epoch,
                 "predicted_value": y_input_pred,
                 "input_value": input_x,
-                "accuracy": accuracy
+                "accuracy": accuracy, 
+                "attempt_count": st.session_state.attempt_count   # ✅ 이 줄을 꼭 추가
+
             }
 
             if func_type == "2차 함수":

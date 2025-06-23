@@ -221,6 +221,8 @@ with st.container():
             """, unsafe_allow_html=True)
 
 # 나머지는 개별 마크다운
+            st.markdown(f"""<span style="font-size: 18px;font-weight: bold;">🔍 <strong>예측 시도 횟수:</strong> {model['attempt_count']}회</span>""", unsafe_allow_html=True)
+
             st.markdown(f"""<span style="font-size: 18px;font-weight: bold;">📘 <strong>학습률:</strong> {model['lr']}</span>""", unsafe_allow_html=True)
             st.markdown(f"""<span style="font-size: 18px;font-weight: bold;">🔁 <strong>반복 횟수:</strong> {model['epoch']}</span>""", unsafe_allow_html=True)
             st.markdown(f"""

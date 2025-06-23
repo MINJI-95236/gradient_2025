@@ -107,10 +107,8 @@ input_y_label = st.text_input("y축 이름", placeholder=default_y)
 def safe_column_name(label, default):
     if not label or str(label).strip() == "":
         return default
-    label = str(label).strip()
-    if label.lower() == "none" or label.isnumeric():
-        return default
-    return label
+    return str(label).strip()
+
 
 # ✅ 내부 처리용 안전한 이름으로 변환
 x_label = safe_column_name(input_x_label, "X")
