@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.set_page_config(page_title="인공지능의 원리", page_icon="🤖", layout="wide")
+st.set_page_config(page_title="데이터 분석 시스템", page_icon="🤖", layout="wide")
 
 hide_default_sidebar = """
     <style>
@@ -32,8 +32,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ✅ 메인 타이틀
-st.title("📊 경사하강법 학습 시스템")
-st.caption("인공지능의 원리를 시각적으로 체험하며 익혀보는 학습 플랫폼")
+st.title("📊 데이터 분석 시스템")
+st.caption("경사하강법을 시각적으로 체험하며 데이터를 분석하는 학습 플랫폼")
 st.markdown("---")
 
 # ✅ 카드형 4단 구성 (예제를 데이터분석보다 앞에 위치)
