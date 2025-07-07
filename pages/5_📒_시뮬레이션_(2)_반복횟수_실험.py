@@ -8,6 +8,12 @@ from matplotlib.ticker import MaxNLocator
 import os
 from matplotlib import font_manager as fm
 
+st.set_page_config(
+    page_title="시뮬레이션 (2) 반복횟수 실험",
+    page_icon="💻",
+    layout="centered"
+)
+
 # ✅ 한글 폰트 설정
 font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
 if os.path.exists(font_path):
@@ -94,10 +100,10 @@ elif st.session_state.select_action_epochs == "reset":
     st.rerun()
 
 # ---------------- UI 구성 ----------------
-st.markdown("## 📒 (2) 시뮬레이션-반복횟수")
+st.markdown("## 💻 (2) 시뮬레이션-반복횟수 실험")
 
 # 체크박스 선택
-st.markdown("### ✅ 비교하고 싶은 반복횟수를 선택하세요:")
+st.markdown("### ✅ 비교하고 싶은 반복횟수를 선택하세요")
 cols = st.columns(len(epoch_options))
 selected_epochs = []
 for i, ep in enumerate(epoch_options):
@@ -157,7 +163,6 @@ st.markdown("### 📘 실습을 통해 무엇을 배웠나요?")
 st.text_area(
     "여러 반복횟수를 비교한 결과, 어떤 점을 배웠나요? 반복이 많아질수록 어떤 변화가 있었나요?",
     height=150,
-    placeholder="예: 반복횟수가 늘어날수록 예측선이 점점 더 정확하게 수렴하는 것을 볼 수 있었습니다.",
     key="epoch_summary"
 )
 

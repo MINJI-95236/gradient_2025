@@ -9,6 +9,12 @@ from matplotlib import font_manager as fm
 import matplotlib
 matplotlib.use("Agg")  # ✅ Streamlit에서 안정적으로 폰트 렌더링
 
+st.set_page_config(
+    page_title="시뮬레이션 (1) 학습률 실험",
+    page_icon="💻",
+    layout="centered"
+)
+
 # ✅ 한글 폰트 설정
 font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
 if os.path.exists(font_path):
@@ -91,9 +97,9 @@ elif st.session_state.select_action == "reset":
     st.rerun()
 
 # ---------------- UI 구성 시작 ----------------
-st.markdown("## 📒 (1) 시뮬레이션-학습률")
+st.markdown("## 💻 (1) 시뮬레이션-학습률 실험")
 
-st.markdown("### ✅ 비교하고 싶은 학습률을 선택하세요:")
+st.markdown("### ✅ 비교하고 싶은 학습률을 선택하세요")
 cols = st.columns(len(learning_rates))
 selected_rates = []
 for i, lr in enumerate(learning_rates):
@@ -156,7 +162,6 @@ st.markdown("### 📘 실습을 통해 무엇을 배웠나요?")
 st.text_area(
     "여러 학습률을 비교한 결과, 어떤 점을 배웠나요? 가장 적절한 학습률은 무엇이라고 생각하나요?",
     height=150,
-    placeholder="예: 학습률 0.01이 가장 안정적으로 수렴함을 확인했습니다. 너무 큰 값은 발산하고, 너무 작은 값은 변화가 거의 없습니다.",
     key="final_summary"
 )
 

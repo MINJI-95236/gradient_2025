@@ -10,7 +10,7 @@ import numpy as np
 
 st.set_page_config(
     page_title="데이터분석 (6) 요약 결과",
-    page_icon="📕",
+    page_icon="📊",
     layout="wide"
 )
 
@@ -81,26 +81,24 @@ hide_default_sidebar = """
 """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 with st.sidebar:
-    # 🏠 홈으로
     st.page_link("app.py", label="HOME", icon="🏠")
     st.markdown("---")
 
-    st.markdown("## 🤖 경사하강법")
+    st.markdown("## 📖 경사하강법")
     st.page_link("pages/1_📘_경사하강법_(1)_최적화란.py", label="(1) 최적화란?")
     st.page_link("pages/2_📘_경사하강법_(2)_학습률이란.py", label="(2) 학습률이란?")
     st.page_link("pages/3_📘_경사하강법_(3)_반복횟수란.py", label="(3) 반복횟수란?")
 
     st.markdown("---")
-
     st.markdown("## 💻 시뮬레이션")
     st.page_link("pages/4_📒_시뮬레이션_(1)_학습률_실험.py", label="(1) 학습률 실험")
     st.page_link("pages/5_📒_시뮬레이션_(2)_반복횟수_실험.py", label="(2) 반복횟수 실험")
-    st.markdown("---")
-    st.markdown("## 🏠 예제")
-    st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
-    
-    st.markdown("---")
 
+    st.markdown("---")
+    st.markdown("## 🔎 예제")
+    st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
+
+    st.markdown("---")
     st.markdown("## 📊 데이터분석")
     st.page_link("pages/6_📕_데이터분석_(1)_기본정보입력.py", label="(1) 기본 정보 입력")
     st.page_link("pages/7_📕_데이터분석_(2)_분석주제선택.py", label="(2) 분석 주제 선택")
@@ -108,7 +106,7 @@ with st.sidebar:
     st.page_link("pages/9_📕_데이터분석_(4)_예측실행.py", label="(4) 예측 실행")
     st.page_link("pages/11_📕_데이터분석_(6)_요약결과.py", label="(5) 요약 결과")
 
-st.title("📕 (5) 요약 결과")
+st.title("📊 (5) 요약 결과")
 
 # 1️⃣ 기본 정보 섹션
 with st.container():
@@ -205,20 +203,27 @@ with st.container():
                 ax.set_ylabel(st.session_state.get("y_label", "y"))
             ax.legend()
             st.pyplot(fig)
-
+        theme = st.get_option("theme.base")
+        text_color ="#111827" if theme == "light" else "#f9fafb"
         with col2:
+            theme = st.get_option("theme.base")
+            text_color = "#111827" if theme == "light" else "#f9fafb"
+
             acc_color = "red" if accuracy >= 90 else "gray"
             acc_weight = "bold" if accuracy >= 90 else "normal"
 
             
             st.markdown(f"""
-                <div style="margin-top: 80px; line-height: 1.8; font-size: 18px; color: #111827;">
-                <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">🧮 예측 수식</div>
-                <div style="font-size: 18px; color: #111827; margin-bottom: 16px;">
+            <div style="margin-top: 80px; line-height: 1.8; font-size: 18px;">
+                <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">
+                    🧮 예측 수식
+                </div>
+                <div style="font-size: 18px; margin-bottom: 16px;">
                     {model['label']}
                 </div>
             </div>
             """, unsafe_allow_html=True)
+
 
 # 나머지는 개별 마크다운
             st.markdown(f"""<span style="font-size: 18px;font-weight: bold;">🔍 <strong>예측 시도 횟수:</strong> {model['attempt_count']}회</span>""", unsafe_allow_html=True)
@@ -235,10 +240,21 @@ with st.container():
 
     else:
         st.info("최종 예측 정보가 없습니다.")
+    theme = st.get_option("theme.base")
+
+    # 예측 해석 박스 색상 설정
+    if theme == "dark":
+        summary_bg = "#374151"        # 어두운 회색
+        summary_border = "#6b7280"    # 테두리
+        summary_text = "#f9fafb"      # 밝은 글자색
+    else:
+        summary_bg = "#fefce8"        # 밝은 노란색
+        summary_border = "#fde68a"
+        summary_text = "#111827"
     if 'predict_summary' in st.session_state:
         st.markdown(f"""
-        <div style='background-color: #fefce8; padding: 18px 20px; border-radius: 10px;
-                    border: 1px solid #fde68a; margin-top: 20px;'>
+        <div style='background-color: {summary_bg}; padding: 18px 20px; border-radius: 10px;
+                    border: 1px solid {summary_border}; margin-top: 20px; color: {summary_text};'>
             <div style='font-weight: 600; font-size: 17px;'>✏️ 예측 결과 해석</div>
             <div>{st.session_state.predict_summary}</div>
         </div>
@@ -266,4 +282,3 @@ st.markdown("""
         </form>
     </div>
 """, unsafe_allow_html=True)
-

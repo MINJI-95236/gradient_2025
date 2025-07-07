@@ -10,7 +10,7 @@ import math
 
 # ✅ 페이지 설정
 st.set_page_config(
-    page_title="예제 - Q. 나 혼자 산다! 다 혼자 산다?",
+    page_title="예제-나 혼자 산다! 다 혼자 산다?",
     page_icon="🏠",
     layout="wide"
 )
@@ -46,7 +46,7 @@ with st.sidebar:
     st.page_link("app.py", label="HOME", icon="🏠")
     st.markdown("---")
 
-    st.markdown("## 🤖 경사하강법")
+    st.markdown("## 📖 경사하강법")
     st.page_link("pages/1_📘_경사하강법_(1)_최적화란.py", label="(1) 최적화란?")
     st.page_link("pages/2_📘_경사하강법_(2)_학습률이란.py", label="(2) 학습률이란?")
     st.page_link("pages/3_📘_경사하강법_(3)_반복횟수란.py", label="(3) 반복횟수란?")
@@ -57,7 +57,7 @@ with st.sidebar:
     st.page_link("pages/5_📒_시뮬레이션_(2)_반복횟수_실험.py", label="(2) 반복횟수 실험")
 
     st.markdown("---")
-    st.markdown("## 🏠 예제")
+    st.markdown("## 🔎 예제")
     st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
 
     st.markdown("---")
@@ -354,17 +354,36 @@ if st.session_state.predict_requested or (
         st.error(f"예측에 실패했습니다: {e}")
 
     st.markdown("### 🔍 당신의 분석을 선택해보세요!")
+    # 현재 테마 감지 (light / dark)
+    theme = st.get_option("theme.base")
 
+    # 다크모드/라이트모드에 따른 색상 설정
+    if theme == "dark":
+        inc_bg = "#004d40"
+        inc_border = "#26a69a"
+        inc_text = "#ffffff"
+        dec_bg = "#4e342e"
+        dec_border = "#ffcc80"
+        dec_text = "#ffffff"
+    else:
+        inc_bg = "#e0f7fa"
+        inc_border = "#00acc1"
+        inc_text = "#000000"
+        dec_bg = "#fff3e0"
+        dec_border = "#ffb74d"
+        dec_text = "#000000"
     col_left, col_right = st.columns(2)
+
 
     with col_left:
         if st.button("📈 1인 가구는 점점 증가합니다.", key="increase"):
             st.success("✅ 훌륭해요! 실제 데이터에서도 꾸준히 증가하는 추세가 나타납니다.")
-            st.markdown("""
-            <div style="background-color:#e0f7fa; padding:15px; border-radius:10px; border-left:6px solid #00acc1;">
-            <b>📌 보충 설명:</b>  
-            1인 가구 비율은 1980년 4.8%에서 2023년 35.5%까지 꾸준히 증가했어요.  
-            이는 고령화, 비혼 인구 증가, 개인의 독립적 삶 선호 등 다양한 사회적 요인과 관련되어 있어요.  
+            st.markdown(f"""
+            <div style="background-color:{inc_bg}; color:{inc_text};
+                        padding:15px; border-radius:10px; border-left:6px solid {inc_border};">
+            <b>📌 보충 설명:</b><br>
+            1인 가구 비율은 1980년 4.8%에서 2023년 35.5%까지 꾸준히 증가했어요.<br>
+            이는 고령화, 비혼 인구 증가, 개인의 독립적 삶 선호 등 다양한 사회적 요인과 관련되어 있어요.<br>
             미래에는 더 많은 혼자 사는 사람들이 생겨날 가능성이 높습니다.
             </div>
             """, unsafe_allow_html=True)
@@ -372,11 +391,12 @@ if st.session_state.predict_requested or (
     with col_right:
         if st.button("📉 1인 가구는 점점 감소합니다.", key="decrease"):
             st.error("❌ 다시 생각해봐요! 그래프를 보면 1인 가구 비율은 점점 증가하고 있어요.")
-            st.markdown("""
-            <div style="background-color:#fff3e0; padding:15px; border-radius:10px; border-left:6px solid #ffb74d;">
-            <b>📌 확인해볼 점:</b>  
-            그래프를 다시 한 번 살펴보세요.  
-            연도에 따라 1인 가구 비율이 거의 꾸준히 상승하고 있다는 점이 보일 거예요.  
+            st.markdown(f"""
+            <div style="background-color:{dec_bg}; color:{dec_text};
+                        padding:15px; border-radius:10px; border-left:6px solid {dec_border};">
+            <b>📌 확인해볼 점:</b><br>
+            그래프를 다시 한 번 살펴보세요.<br>
+            연도에 따라 1인 가구 비율이 거의 꾸준히 상승하고 있다는 점이 보일 거예요.<br>
             사회 변화에 따라 이러한 추세는 당분간 계속될 것으로 예상됩니다.
             </div>
             """, unsafe_allow_html=True)

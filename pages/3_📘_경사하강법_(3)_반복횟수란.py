@@ -6,7 +6,7 @@ from matplotlib import font_manager
 from sklearn.metrics import r2_score
 
 st.set_page_config(
-    page_title="📘 경사하강법 (3) 반복횟수란?",
+    page_title="경사하강법 (3) 반복횟수란?",
     page_icon="📘",
     layout="centered"
 )
@@ -26,7 +26,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.title("📘 (3) 경사하강법 - 반복횟수")
+st.title("📖 (3) 경사하강법 - 반복횟수")
 col1, col2, col3 = st.columns([2, 7, 3])
 with col3:
     if st.button("🏠 홈으로"):
@@ -102,7 +102,7 @@ with st.sidebar:
     st.page_link("app.py", label="HOME", icon="🏠")
     st.markdown("---")
 
-    st.markdown("## 🤖 경사하강법")
+    st.markdown("## 📖 경사하강법")
     st.page_link("pages/1_📘_경사하강법_(1)_최적화란.py", label="(1) 최적화란?")
     st.page_link("pages/2_📘_경사하강법_(2)_학습률이란.py", label="(2) 학습률이란?")
     st.page_link("pages/3_📘_경사하강법_(3)_반복횟수란.py", label="(3) 반복횟수란?")
@@ -113,7 +113,7 @@ with st.sidebar:
     st.page_link("pages/5_📒_시뮬레이션_(2)_반복횟수_실험.py", label="(2) 반복횟수 실험")
 
     st.markdown("---")
-    st.markdown("## 🏠 예제")
+    st.markdown("## 🔎 예제")
     st.page_link("pages/_5_1_example_icecream_prediction.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
 
     st.markdown("---")
