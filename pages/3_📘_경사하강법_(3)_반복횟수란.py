@@ -8,7 +8,7 @@ from sklearn.metrics import r2_score
 st.set_page_config(
     page_title="경사하강법 (3) 반복횟수란?",
     page_icon="📘",
-    layout="centered"
+    layout="wide"
 )
 
 # ✅ 한글 폰트 설정

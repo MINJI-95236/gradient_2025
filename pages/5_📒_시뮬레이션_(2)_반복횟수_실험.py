@@ -11,7 +11,7 @@ from matplotlib import font_manager as fm
 st.set_page_config(
     page_title="시뮬레이션 (2) 반복횟수 실험",
     page_icon="💻",
-    layout="centered"
+    layout="wide"
 )
 
 # ✅ 한글 폰트 설정
@@ -100,7 +100,11 @@ elif st.session_state.select_action_epochs == "reset":
     st.rerun()
 
 # ---------------- UI 구성 ----------------
-st.markdown("## 💻 (2) 시뮬레이션-반복횟수 실험")
+st.title("💻 (2) 시뮬레이션-반복횟수 실험")
+col_spacer, col_home = st.columns([5, 1])
+with col_home:
+    if st.button("🏠 홈으로"):
+        st.switch_page("app.py")
 
 # 체크박스 선택
 st.markdown("### ✅ 비교하고 싶은 반복횟수를 선택하세요")
@@ -166,10 +170,7 @@ st.text_area(
     key="epoch_summary"
 )
 
-col1, col2, col3 = st.columns([2, 7, 3])  # col3이 오른쪽 끝
-with col3:
-    if st.button("🏠 홈으로"):
-        st.switch_page("app.py")  # 또는 정확한 페이지 경로
+
 
 
 with st.sidebar:
@@ -177,7 +178,7 @@ with st.sidebar:
     st.page_link("app.py", label="HOME", icon="🏠")
     st.markdown("---")
 
-    st.markdown("## 🤖 경사하강법")
+    st.markdown("## 📖 경사하강법")
     st.page_link("pages/1_📘_경사하강법_(1)_최적화란.py", label="(1) 최적화란?")
     st.page_link("pages/2_📘_경사하강법_(2)_학습률이란.py", label="(2) 학습률이란?")
     st.page_link("pages/3_📘_경사하강법_(3)_반복횟수란.py", label="(3) 반복횟수란?")

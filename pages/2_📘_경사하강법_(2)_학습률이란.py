@@ -9,7 +9,7 @@ from matplotlib import font_manager
 st.set_page_config(
     page_title="경사하강법 (2) 학습률이란?",
     page_icon="📖",
-    layout="centered"
+    layout="wide"
 )
 # 프로젝트 내 폰트 경로 등록
 font_path = "./fonts/NotoSansKR-Regular.ttf"

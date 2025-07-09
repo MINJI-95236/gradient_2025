@@ -32,8 +32,29 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ✅ 메인 타이틀
-st.title("📊 나만의 데이터 연구소")
-st.caption("경사하강법을 시각적으로 체험하며 데이터를 분석하는 학습 플랫폼")
+# ✅ 배너 이미지 삽입 (타이틀 대신)
+st.markdown(
+    """
+    <div style="
+        font-size: 18px;
+        font-weight: 500;
+        color: #444;
+        margin-top: 10px;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    ">
+        📌 경사하강법을 시각적으로 체험하며 데이터를 분석하는 학습 플랫폼
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+from PIL import Image
+
+banner = Image.open("images/main_banner.png")  # 이미지 경로는 네 이미지 위치에 맞게 수정
+st.image(banner, use_container_width=True)   # 또는 width=1200 같은 고정 폭도 가능
+
 st.markdown("---")
 
 # ✅ 카드형 4단 구성 (예제를 데이터분석보다 앞에 위치)

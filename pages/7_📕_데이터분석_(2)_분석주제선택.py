@@ -2,7 +2,7 @@ import streamlit as st
 st.set_page_config(
     page_title="데이터분석 (2) 분석 주제 선택",
     page_icon="📊",
-    layout="centered"
+    layout="wide"
 )
 
 hide_default_sidebar = """
@@ -49,21 +49,36 @@ if "name" not in st.session_state:
 
 # 주제 입력
 subject = st.text_area(
-    "📌 어떤 데이터를 예측해보고 싶나요?",
+    "📌 국가통계포털을 이용해 분석하고 싶은 데이터를 찾아보고, 주제를 작성하세요!",
     value=st.session_state.get("subject", ""),
     placeholder="예: 공부시간에 대한 성적 예측하기",
     key="input_subject"  # 고유 key 설정
 )
-
 st.markdown("[🔎 국가통계포털 바로가기](https://kosis.kr/index/index.do)", unsafe_allow_html=True)
 
-# 저장 버튼
-if st.button("✅ 주제 저장"):
-    if subject.strip():
-        st.session_state.subject = subject
-        st.success("✅ 주제가 저장되었습니다! 왼쪽 메뉴에서 다음 단계로 이동하세요.")
-    else:
-        st.warning("⚠️ 주제를 입력해주세요.")
+# 👉 주제 저장 버튼은 col_right에 배치
+col_left, col_right = st.columns([3, 1])
+with col_left:
+    with open("data/sample data.csv", "rb") as file:
+        st.download_button(
+            label="📥 예시 주제 및 데이터 다운로드",
+            data=file,
+            file_name="2008~2022년의 인구 1000명당 병상수.csv",
+            mime="text/csv"
+        )
+
+with col_right:
+    if st.button("✅ 주제 저장", use_container_width=True):
+        if subject.strip():
+            st.session_state.subject = subject
+            st.session_state.subject_saved = True
+        else:
+            st.warning("⚠️ 주제를 입력해주세요.")
+
+# 👉 메시지는 컬럼 바깥에 전역으로 표시
+if st.session_state.get("subject_saved"):
+    st.success("✅ 주제가 저장되었습니다! 왼쪽 메뉴에서 다음 단계로 이동하세요.")
+
 
 if "subject" in st.session_state:
     col1, col2, col3 = st.columns([3, 15, 3])
