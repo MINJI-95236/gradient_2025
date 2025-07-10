@@ -61,11 +61,11 @@ st.markdown("[🔎 국가통계포털 바로가기](https://kosis.kr/index/index
 # 👉 주제 저장 버튼은 col_right에 배치
 col_left, col_right = st.columns([3, 1])
 with col_left:
-    with open("data/sample data.csv", "rb") as file:
+    with open("data/sample data.xlsx", "rb") as file:
         st.download_button(
             label="📥 예시 주제 및 데이터 다운로드",
             data=file,
-            file_name="2008~2022년의 인구 1000명당 병상수.csv",
+            file_name="2008~2022년의 인구 1000명당 병상수.xlsx",
             mime="text/csv"
         )
 
