@@ -12,7 +12,7 @@ import math
 st.set_page_config(
     page_title="예제-나 혼자 산다! 다 혼자 산다?",
     page_icon="🏠",
-    layout="wide"
+    layout="centered"
 )
 # 🔒 자동 생성된 사이드바 메뉴 숨기기
 hide_default_sidebar = """

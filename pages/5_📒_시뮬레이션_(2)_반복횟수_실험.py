@@ -11,7 +11,7 @@ from matplotlib import font_manager as fm
 st.set_page_config(
     page_title="시뮬레이션 (2) 반복횟수 실험",
     page_icon="💻",
-    layout="wide"
+    layout="centered"
 )
 
 # ✅ 한글 폰트 설정

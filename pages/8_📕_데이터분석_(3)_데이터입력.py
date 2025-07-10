@@ -27,7 +27,7 @@ matplotlib.rcParams["axes.unicode_minus"] = False
 st.set_page_config(
     page_title="데이터분석 (3) 데이터 입력",
     page_icon="📊",
-    layout="wide"
+    layout="centered"
 )
 
 # 🔒 자동 생성된 사이드바 메뉴 숨기기

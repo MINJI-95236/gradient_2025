@@ -2,7 +2,7 @@ import streamlit as st
 st.set_page_config(
     page_title="데이터분석 (2) 분석 주제 선택",
     page_icon="📊",
-    layout="wide"
+    layout="centered"
 )
 
 hide_default_sidebar = """

@@ -3,7 +3,7 @@ import streamlit as st
 st.set_page_config(
     page_title="경사하강법 (1) 최적화란?",
     page_icon="📖",
-    layout="wide"
+    layout="centered"
 )
 
 # 🔒 자동 생성된 사이드바 메뉴 숨기기

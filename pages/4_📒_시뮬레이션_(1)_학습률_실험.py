@@ -12,7 +12,7 @@ matplotlib.use("Agg")  # ✅ Streamlit에서 안정적으로 폰트 렌더링
 st.set_page_config(
     page_title="시뮬레이션 (1) 학습률 실험",
     page_icon="💻",
-    layout="wide"
+    layout="centered"
 )
 
 # ✅ 한글 폰트 설정

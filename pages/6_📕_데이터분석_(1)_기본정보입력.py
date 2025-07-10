@@ -3,7 +3,7 @@ import streamlit as st
 st.set_page_config(
     page_title="데이터분석 (1) 기본 정보 입력",
     page_icon="📊",
-    layout="wide"
+    layout="centered"
 )
 
 # 🔒 자동 생성된 사이드바 메뉴 숨기기

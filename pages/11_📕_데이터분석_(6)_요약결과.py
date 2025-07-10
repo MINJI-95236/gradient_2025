@@ -11,7 +11,7 @@ import numpy as np
 st.set_page_config(
     page_title="데이터분석 (6) 요약 결과",
     page_icon="📊",
-    layout="wide"
+    layout="centered"
 )
 
 # ✅ 폰트 설정
