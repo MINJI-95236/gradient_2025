@@ -4,6 +4,7 @@ import numpy as np
 import platform
 from matplotlib import font_manager
 from sklearn.metrics import r2_score
+from PIL import Image
 
 st.set_page_config(
     page_title="경사하강법 (3) 반복횟수란?",
@@ -26,11 +27,12 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.title("📖 (3) 경사하강법 - 반복횟수")
-col1, col2, col3 = st.columns([2, 7, 3])
-with col3:
+banner = Image.open("images/banner_(3)경사하강법.png")  # 이미지 경로는 저장 위치에 따라 조정
+st.image(banner, use_container_width=True)
+col1, col2 = st.columns([12,2])  # col3이 오른쪽 끝
+with col2:
     if st.button("🏠 홈으로"):
-        st.switch_page("app.py")
+        st.switch_page("app.py")  # 또는 정확한 페이지 경로
 
 st.markdown("""
 ### 🔁 반복횟수란?

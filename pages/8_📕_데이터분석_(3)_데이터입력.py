@@ -7,6 +7,8 @@ import matplotlib
 import matplotlib.ticker as ticker
 from matplotlib.ticker import MaxNLocator
 import os
+from PIL import Image
+
 
 # ✅ 한글 폰트 설정
 font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
@@ -40,7 +42,8 @@ hide_default_sidebar = """
 """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
-st.title("📊 (3) 데이터 입력")
+banner = Image.open("images/banner_(3)데이터분석.png")  # 이미지 경로는 저장 위치에 따라 조정
+st.image(banner, use_container_width=True)
 
 with st.sidebar:
     st.page_link("app.py", label="HOME", icon="🏠")

@@ -7,6 +7,7 @@ import matplotlib.font_manager as fm
 import matplotlib
 import os
 import math
+from PIL import Image
 
 # ✅ 페이지 설정
 st.set_page_config(
@@ -69,13 +70,15 @@ with st.sidebar:
     st.page_link("pages/11_📕_데이터분석_(6)_요약결과.py", label="(5) 요약 결과")
 
 # ✅ 본문 구성
-st.title("🔎 나 혼자 산다! 다 혼자 산다?")
+banner = Image.open("images/banner_예제.png")  # 이미지 경로는 저장 위치에 따라 조정
+st.image(banner, use_container_width=True)
 
 # ✅ 아래 줄에 오른쪽 정렬된 '홈으로' 버튼
-col_spacer, col_button = st.columns([5, 1])
-with col_button:
+
+col1, col2 = st.columns([12,2])  # col3이 오른쪽 끝
+with col2:
     if st.button("🏠 홈으로"):
-        st.switch_page("app.py")
+        st.switch_page("app.py")  # 또는 정확한 페이지 경로
 
 # 그림 + 설명 (데이터 입력 섹션 위)
 

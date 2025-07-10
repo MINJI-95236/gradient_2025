@@ -1,4 +1,5 @@
 import streamlit as st
+from PIL import Image
 
 st.set_page_config(
     page_title="데이터분석 (1) 기본 정보 입력",
@@ -15,7 +16,8 @@ hide_default_sidebar = """
     </style>
 """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
-st.title("📊 (1) 기본 정보 입력")
+banner = Image.open("images/banner_(1)데이터분석.png")  # 이미지 경로는 저장 위치에 따라 조정
+st.image(banner, use_container_width=True)
 
 name = st.text_input("이름", value=st.session_state.get("name", ""), key="input_name")
 student_id = st.text_input("학번", value=st.session_state.get("student_id", ""), key="input_id")

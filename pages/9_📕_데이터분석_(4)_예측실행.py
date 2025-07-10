@@ -9,6 +9,7 @@ from matplotlib.ticker import MaxNLocator
 import numpy as np
 import os
 import math
+from PIL import Image
 
 
 # ✅ 한글 폰트 설정
@@ -45,7 +46,8 @@ hide_default_sidebar = """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
 
-st.title("📊 (4) 예측 실행")
+banner = Image.open("images/banner_(4)데이터분석.png")  # 이미지 경로는 저장 위치에 따라 조정
+st.image(banner, use_container_width=True)
 with st.sidebar:
     st.page_link("app.py", label="HOME", icon="🏠")
     st.markdown("---")

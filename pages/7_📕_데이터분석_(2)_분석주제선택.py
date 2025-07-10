@@ -1,4 +1,6 @@
 import streamlit as st
+from PIL import Image
+
 st.set_page_config(
     page_title="데이터분석 (2) 분석 주제 선택",
     page_icon="📊",
@@ -14,8 +16,8 @@ hide_default_sidebar = """
 """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
-st.title("📊 (2) 분석 주제 선택")
-
+banner = Image.open("images/banner_(2)데이터분석.png")  # 이미지 경로는 저장 위치에 따라 조정
+st.image(banner, use_container_width=True)
 with st.sidebar:
     st.page_link("app.py", label="HOME", icon="🏠")
     st.markdown("---")

@@ -7,6 +7,7 @@ import matplotlib.ticker as ticker
 from matplotlib.ticker import MaxNLocator
 import os
 from matplotlib import font_manager as fm
+from PIL import Image
 
 st.set_page_config(
     page_title="시뮬레이션 (2) 반복횟수 실험",
@@ -100,9 +101,11 @@ elif st.session_state.select_action_epochs == "reset":
     st.rerun()
 
 # ---------------- UI 구성 ----------------
-st.title("💻 (2) 시뮬레이션-반복횟수 실험")
-col_spacer, col_home = st.columns([5, 1])
-with col_home:
+banner = Image.open("images/banner_(2)시뮬레이션.png")  # 이미지 경로는 저장 위치에 따라 조정
+st.image(banner, use_container_width=True)
+# ✅ 제목 바로 아래 줄 오른쪽에 '홈으로' 버튼 배치
+col1, col2 = st.columns([12,2])  # col3이 오른쪽 끝
+with col2:
     if st.button("🏠 홈으로"):
         st.switch_page("app.py")
 

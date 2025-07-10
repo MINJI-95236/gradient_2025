@@ -6,6 +6,7 @@ import matplotlib.font_manager as fm
 import matplotlib
 import os
 import numpy as np
+from PIL import Image
 
 
 st.set_page_config(
@@ -106,7 +107,8 @@ with st.sidebar:
     st.page_link("pages/9_📕_데이터분석_(4)_예측실행.py", label="(4) 예측 실행")
     st.page_link("pages/11_📕_데이터분석_(6)_요약결과.py", label="(5) 요약 결과")
 
-st.title("📊 (5) 요약 결과")
+banner = Image.open("images/banner_(5)데이터분석.png")  # 이미지 경로는 저장 위치에 따라 조정
+st.image(banner, use_container_width=True)
 
 # 1️⃣ 기본 정보 섹션
 with st.container():
