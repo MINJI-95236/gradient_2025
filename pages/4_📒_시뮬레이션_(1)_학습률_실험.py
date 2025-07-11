@@ -101,7 +101,7 @@ elif st.session_state.select_action == "reset":
 banner = Image.open("images/banner_(1)시뮬레이션.png")  # 이미지 경로는 저장 위치에 따라 조정
 st.image(banner, use_container_width=True)
 # ✅ 제목 바로 아래 줄 오른쪽에 '홈으로' 버튼 배치
-col1, col2 = st.columns([12,2])  # col3이 오른쪽 끝
+col1, col2 = st.columns([14,3])  # col3이 오른쪽 끝
 with col2:
     if st.button("🏠 홈으로"):
         st.switch_page("app.py")

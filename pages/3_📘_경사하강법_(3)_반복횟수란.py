@@ -29,7 +29,7 @@ st.markdown("""
 
 banner = Image.open("images/banner_(3)경사하강법.png")  # 이미지 경로는 저장 위치에 따라 조정
 st.image(banner, use_container_width=True)
-col1, col2 = st.columns([12,2])  # col3이 오른쪽 끝
+col1, col2 = st.columns([14,3])  # col3이 오른쪽 끝
 with col2:
     if st.button("🏠 홈으로"):
         st.switch_page("app.py")  # 또는 정확한 페이지 경로
