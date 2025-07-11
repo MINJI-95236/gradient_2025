@@ -75,7 +75,7 @@ st.image(banner, use_container_width=True)
 
 # ✅ 아래 줄에 오른쪽 정렬된 '홈으로' 버튼
 
-col1, col2 = st.columns([12,2])  # col3이 오른쪽 끝
+col1, col2 = st.columns([14,3])  # col3이 오른쪽 끝
 with col2:
     if st.button("🏠 홈으로"):
         st.switch_page("app.py")  # 또는 정확한 페이지 경로
