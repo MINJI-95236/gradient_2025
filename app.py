@@ -66,7 +66,6 @@ with col3:
             <a href="/example" target="_self" style="
                 display: block;
                 line-height: 1.4;
-                font-weight: 500;
                 word-break: keep-all;
                 white-space: normal;
                 color: inherit;
