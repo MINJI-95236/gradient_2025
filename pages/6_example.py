@@ -59,7 +59,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("## 🔎 예제")
-    st.page_link("pages/6_예제.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
+    st.page_link("pages/6_example.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
 
     st.markdown("---")
     st.markdown("## 📊 데이터분석")
@@ -128,7 +128,7 @@ df_input = st.data_editor(df_default, use_container_width=True, num_rows="dynami
 if "scatter_shown" not in st.session_state:
     st.session_state.scatter_shown = False
 # 👈🏼 버튼과 문구를 한 줄에 나란히 배치
-col_btn, col_text = st.columns([3,9])
+col_btn, col_text = st.columns([4,9])
 
 with col_btn:
     if st.button("📊 산점도 보기"):
@@ -136,6 +136,7 @@ with col_btn:
             st.warning("입력된 데이터가 충분하지 않습니다. 최소 2개 이상 입력해주세요.")
         else:
             st.session_state.scatter_shown = True
+
 
 with col_text:
     st.markdown(

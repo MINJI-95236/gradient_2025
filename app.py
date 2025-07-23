@@ -62,11 +62,21 @@ with col3:
         st.markdown('<div class="card-title-custom">🔎 예제</div>', unsafe_allow_html=True)
         st.markdown('<hr class="card-divider-custom">', unsafe_allow_html=True)
 
-        st.page_link(
-            "pages/6_예제.py",
-            label="Q. 나 혼자 산다!      다 혼자 산다?",
-            icon=None
-        )
+        st.markdown("""
+            <a href="/example" target="_self" style="
+                display: block;
+                line-height: 1.4;
+                font-weight: 500;
+                word-break: keep-all;
+                white-space: normal;
+                color: inherit;
+                text-decoration: none;
+            ">
+                Q. 나 혼자 산다!<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;다 혼자 산다?
+            </a>
+        """, unsafe_allow_html=True)
+
+
 
 
 with col4:
@@ -100,7 +110,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("## 🔎 예제")
-    st.page_link("pages/6_예제.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
+    st.page_link("pages/6_example.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
 
     st.markdown("---")
     st.markdown("## 📊 데이터분석")
