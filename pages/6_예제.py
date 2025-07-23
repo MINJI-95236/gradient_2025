@@ -128,7 +128,7 @@ df_input = st.data_editor(df_default, use_container_width=True, num_rows="dynami
 if "scatter_shown" not in st.session_state:
     st.session_state.scatter_shown = False
 # 👈🏼 버튼과 문구를 한 줄에 나란히 배치
-col_btn, col_text = st.columns([2,9])
+col_btn, col_text = st.columns([3,9])
 
 with col_btn:
     if st.button("📊 산점도 보기"):
