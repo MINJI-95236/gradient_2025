@@ -29,7 +29,7 @@ hide_default_sidebar = """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
 # ✅ 배너 이미지 삽입 (제목 대체)
-banner = Image.open("images/(3)제목_학습률.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(3)title_learning_rate.png")  # 이미지 경로는 저장 위치에 따라 조정
 st.image(banner, use_container_width=True)
 col1, col2 = st.columns([14,3])  # col3이 오른쪽 끝
 with col2:
@@ -54,11 +54,11 @@ import streamlit as st
 
 col1, col2 = st.columns(2)
 with col1:
-    img1 = Image.open("images/(14)예시_너무 작은 학습률.png").resize((400, 400))  # (width, height)
+    img1 = Image.open("images/(14)example_too_small_lr.png").resize((400, 400))  # (width, height)
     st.image(img1)
 
 with col2:
-    img2 = Image.open("images/(17)예시_너무 큰 학습률.png").resize((400, 400))
+    img2 = Image.open("images/(17)example_too_big_lr.png").resize((400, 400))
     st.image(img2)
 
 st.markdown("")
@@ -66,11 +66,11 @@ st.markdown("")
 # 두 번째 줄 - 이미지 두 개
 col3, col4 = st.columns(2)
 with col3:
-    img3 = Image.open("images/(15)예시_적절한 학습률(1).png").resize((400, 400))
+    img3 = Image.open("images/(15)example_good_lr_1.png").resize((400, 400))
     st.image(img3)
 
 with col4:
-    img4 = Image.open("images/(16)예시_적절한 학습률(2).png").resize((400, 400))
+    img4 = Image.open("images/(16)example_good_lr_2.png").resize((400, 400))
     st.image(img4)
 
 

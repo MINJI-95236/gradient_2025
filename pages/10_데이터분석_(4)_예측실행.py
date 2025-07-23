@@ -46,7 +46,7 @@ hide_default_sidebar = """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
 
-banner = Image.open("images/(11)제목_예측실행.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(11)title_run_prediction.png")  # 이미지 경로는 저장 위치에 따라 조정
 st.image(banner, use_container_width=True)
 with st.sidebar:
     st.page_link("app.py", label="HOME", icon="🏠")

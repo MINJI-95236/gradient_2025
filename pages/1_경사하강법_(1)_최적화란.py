@@ -18,7 +18,7 @@ hide_default_sidebar = """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
 # ✅ 배너 이미지 삽입 (제목 대체)
-banner = Image.open("images/(2)제목_최적화.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(2)title_optimization.png")  # 이미지 경로는 저장 위치에 따라 조정
 st.image(banner, use_container_width=True)
 
 col1, col2 = st.columns([14,3])  # col3이 오른쪽 끝

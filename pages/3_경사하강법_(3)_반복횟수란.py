@@ -27,7 +27,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-banner = Image.open("images/(4)제목_반복횟수.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(4)title_epochs.png")  # 이미지 경로는 저장 위치에 따라 조정
 st.image(banner, use_container_width=True)
 col1, col2 = st.columns([14,3])  # col3이 오른쪽 끝
 with col2:

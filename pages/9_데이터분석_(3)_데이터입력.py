@@ -42,7 +42,7 @@ hide_default_sidebar = """
 """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
-banner = Image.open("images/(10)제목_데이터입력.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(10)title_data_input.png")  # 이미지 경로는 저장 위치에 따라 조정
 st.image(banner, use_container_width=True)
 
 with st.sidebar:

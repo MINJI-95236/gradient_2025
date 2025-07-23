@@ -70,7 +70,7 @@ with st.sidebar:
     st.page_link("pages/11_데이터분석_(5)_요약결과.py", label="(5) 요약 결과")
 
 # ✅ 본문 구성
-banner = Image.open("images/(7)제목_예제.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(7)title_example.png")  # 이미지 경로는 저장 위치에 따라 조정
 st.image(banner, use_container_width=True)
 
 # ✅ 아래 줄에 오른쪽 정렬된 '홈으로' 버튼
@@ -85,7 +85,7 @@ with col2:
 col1, col2 = st.columns([2, 3])  # 왼쪽: 영상 / 오른쪽: 설명
 
 with col1:
-    st.image("images/(13)예제_예시만화.png", use_container_width=True)
+    st.image("images/(13)example_cartoon.png", use_container_width=True)
 
 
 with col2:

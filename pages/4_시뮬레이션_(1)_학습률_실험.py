@@ -98,7 +98,7 @@ elif st.session_state.select_action == "reset":
     st.rerun()
 
 # ---------------- UI 구성 시작 ----------------
-banner = Image.open("images/(5)제목_학습률실험.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(5)title_learning_rate_exp.png")  # 이미지 경로는 저장 위치에 따라 조정
 st.image(banner, use_container_width=True)
 # ✅ 제목 바로 아래 줄 오른쪽에 '홈으로' 버튼 배치
 col1, col2 = st.columns([14,3])  # col3이 오른쪽 끝

@@ -107,7 +107,7 @@ with st.sidebar:
     st.page_link("pages/10_데이터분석_(4)_예측실행.py", label="(4) 예측 실행")
     st.page_link("pages/11_데이터분석_(5)_요약결과.py", label="(5) 요약 결과")
 
-banner = Image.open("images/(12)제목_요약결과.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(12)title_summary_result.png")  # 이미지 경로는 저장 위치에 따라 조정
 st.image(banner, use_container_width=True)
 
 # 1️⃣ 기본 정보 섹션

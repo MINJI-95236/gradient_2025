@@ -16,7 +16,7 @@ hide_default_sidebar = """
     </style>
 """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
-banner = Image.open("images/(8)제목_기본정보입력.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(8)title_basic_info.png")  # 이미지 경로는 저장 위치에 따라 조정
 st.image(banner, use_container_width=True)
 
 name = st.text_input("이름", value=st.session_state.get("name", ""), key="input_name")
