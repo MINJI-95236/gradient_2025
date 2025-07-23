@@ -64,7 +64,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("## 🔎 예제")
-    st.page_link("pages/6_예제.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
+    st.page_link("pages/6_example.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
 
     st.markdown("---")
     st.markdown("## 📊 데이터분석")
@@ -312,8 +312,8 @@ if st.session_state.predict_requested:
     colA, colB, colC = st.columns([3, 15, 3])
     with colA:
         if st.button("⬅️ 이전", key="go_back"):
-            st.switch_page("pages/8_📕_데이터분석_(3)_데이터입력.py")
+            st.switch_page("pages/9_데이터분석_(3)_데이터입력.py")
     with colC:
         if st.button("➡️ 다음", key="go_summary"):
             st.session_state["predict_summary"] = predict_text  # 수동으로 저장
-            st.switch_page("pages/11_📕_데이터분석_(6)_요약결과.py")
+            st.switch_page("pages/11_데이터분석_(5)_요약결과.py")

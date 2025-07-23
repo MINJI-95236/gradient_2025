@@ -190,7 +190,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("## 🔎 예제")
-    st.page_link("pages/6_예제.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
+    st.page_link("pages/6_example.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
 
     st.markdown("---")
     st.markdown("## 📊 데이터분석")

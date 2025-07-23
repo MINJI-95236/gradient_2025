@@ -41,7 +41,7 @@ if "name" in st.session_state:
     col1, col2, col3 = st.columns([3, 1, 1])
     with col3:
         if st.button("➡️ 다음"):
-            st.switch_page("pages/7_📕_데이터분석_(2)_분석주제선택.py")
+            st.switch_page("pages/8_데이터분석_(2)_분석주제선택.py")
 
 with st.sidebar:
     st.page_link("app.py", label="HOME", icon="🏠")
@@ -59,7 +59,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("## 🔎 예제")
-    st.page_link("pages/6_예제.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
+    st.page_link("pages/6_example.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
 
     st.markdown("---")
     st.markdown("## 📊 데이터분석")

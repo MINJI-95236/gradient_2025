@@ -34,7 +34,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("## 🔎 예제")
-    st.page_link("pages/6_예제.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
+    st.page_link("pages/6_example.py", label="Q. 나 혼자 산다! 다 혼자 산다?")
 
     st.markdown("---")
     st.markdown("## 📊 데이터분석")
@@ -85,10 +85,10 @@ if "subject" in st.session_state:
     col1, col2, col3 = st.columns([3, 15, 3])
     with col1:
         if st.button("⬅️ 이전"):
-            st.switch_page("pages/6_📕_데이터분석_(1)_기본정보입력.py")
+            st.switch_page("pages/7_데이터분석_(1)_기본정보입력.py")
     with col3:
         if st.button("➡️ 다음"):
-            st.switch_page("pages/8_📕_데이터분석_(3)_데이터입력.py")
+            st.switch_page("pages/9_데이터분석_(3)_데이터입력.py")
 
 
 
