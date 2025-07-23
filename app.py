@@ -35,7 +35,7 @@ st.markdown("""
 # ✅ 배너 이미지 삽입 (타이틀 대신)
 from PIL import Image
 
-banner = Image.open("images/(1)제목_홈.png")  # 이미지 경로는 네 이미지 위치에 맞게 수정
+banner = Image.open("images/(1)main_banner.png")  # 이미지 경로는 네 이미지 위치에 맞게 수정
 st.image(banner, use_container_width=True)   # 또는 width=1200 같은 고정 폭도 가능
 
 st.markdown("---")
