@@ -15,7 +15,6 @@ st.set_page_config(
     layout="centered"
 )
 
-# ✅ 폰트 설정
 font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
 if os.path.exists(font_path):
     font_prop = fm.FontProperties(fname=font_path)
@@ -72,7 +71,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 🔒 자동 생성된 사이드바 메뉴 숨기기
 hide_default_sidebar = """
     <style>
     [data-testid="stSidebarNav"] {
@@ -107,10 +105,9 @@ with st.sidebar:
     st.page_link("pages/10_데이터분석_(4)_예측실행.py", label="(4) 예측 실행")
     st.page_link("pages/11_데이터분석_(5)_요약결과.py", label="(5) 요약 결과")
 
-banner = Image.open("images/(12)title_summary_result.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(12)title_summary_result.png")  
 st.image(banner, use_container_width=True)
 
-# 1️⃣ 기본 정보 섹션
 with st.container():
     info_data = {
         "이름": st.session_state.get("name", "정보 없음"),
@@ -129,7 +126,6 @@ with st.container():
             </div>
             """, unsafe_allow_html=True)
 
-# 2️⃣ 분석 주제
 with st.container():
     st.markdown("### 🔵 선택한 분석 주제")
     subject = st.session_state.get('subject', '정보 없음')
@@ -143,13 +139,12 @@ with st.container():
 
 st.divider()
 
-# 3️⃣ 입력한 데이터 및 분석
 if 'x_values' in st.session_state and 'y_values' in st.session_state:
     st.markdown("### 🟣 산점도 그래프 & 분석 내용")
 
-    col1, col2 = st.columns([3, 2])  # 비율 조정 가능 (2:3 또는 1:1 등)
+    col1, col2 = st.columns([3, 2])  
 
-    # 🔹 왼쪽: 산점도 그래프
+
     with col1:
         fig, ax = plt.subplots(figsize=(5.5, 4))
         ax.scatter(st.session_state.x_values, st.session_state.y_values, color='blue')
@@ -161,7 +156,7 @@ if 'x_values' in st.session_state and 'y_values' in st.session_state:
             ax.set_ylabel(st.session_state.get("y_label", "y"))
         st.pyplot(fig)
 
-    # 🔹 오른쪽: 분석 결과 텍스트
+
     with col2:
         if 'analysis_text' in st.session_state:
             st.markdown(f"""
@@ -183,7 +178,7 @@ with st.container():
         final_idx = st.session_state.selected_model_indices[-1]
         model = st.session_state.history[final_idx]
 
-        # ✅ 정확도 계산
+      
         y_true = np.array(st.session_state.y_values)
         y_pred = np.array(model['y_pred'][-len(y_true):])
         ss_total = np.sum((y_true - np.mean(y_true))**2)
@@ -227,7 +222,7 @@ with st.container():
             """, unsafe_allow_html=True)
 
 
-# 나머지는 개별 마크다운
+
             st.markdown(f"""<span style="font-size: 18px;font-weight: bold;">🔍 <strong>예측 시도 횟수:</strong> {model['attempt_count']}회</span>""", unsafe_allow_html=True)
 
             st.markdown(f"""<span style="font-size: 18px;font-weight: bold;">📘 <strong>학습률:</strong> {model['lr']}</span>""", unsafe_allow_html=True)
@@ -244,13 +239,12 @@ with st.container():
         st.info("최종 예측 정보가 없습니다.")
     theme = st.get_option("theme.base")
 
-    # 예측 해석 박스 색상 설정
     if theme == "dark":
-        summary_bg = "#374151"        # 어두운 회색
-        summary_border = "#6b7280"    # 테두리
-        summary_text = "#f9fafb"      # 밝은 글자색
+        summary_bg = "#374151"        
+        summary_border = "#6b7280"    
+        summary_text = "#f9fafb"      
     else:
-        summary_bg = "#fefce8"        # 밝은 노란색
+        summary_bg = "#fefce8"        
         summary_border = "#fde68a"
         summary_text = "#111827"
     if 'predict_summary' in st.session_state:

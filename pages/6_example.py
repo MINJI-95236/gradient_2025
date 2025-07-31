@@ -9,13 +9,11 @@ import os
 import math
 from PIL import Image
 
-# ✅ 페이지 설정
 st.set_page_config(
     page_title="예제-나 혼자 산다! 다 혼자 산다?",
     page_icon="🏠",
     layout="centered"
 )
-# 🔒 자동 생성된 사이드바 메뉴 숨기기
 hide_default_sidebar = """
     <style>
     [data-testid="stSidebarNav"] {
@@ -24,7 +22,7 @@ hide_default_sidebar = """
     </style>
 """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
-# ✅ 한글 폰트 설정
+
 font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
 if os.path.exists(font_path):
     fm.fontManager.addfont(font_path)
@@ -42,7 +40,6 @@ else:
 
 plt.rcParams["axes.unicode_minus"] = False
 
-# ✅ 사이드바 메뉴 구성
 with st.sidebar:
     st.page_link("app.py", label="HOME", icon="🏠")
     st.markdown("---")
@@ -69,20 +66,16 @@ with st.sidebar:
     st.page_link("pages/10_데이터분석_(4)_예측실행.py", label="(4) 예측 실행")
     st.page_link("pages/11_데이터분석_(5)_요약결과.py", label="(5) 요약 결과")
 
-# ✅ 본문 구성
-banner = Image.open("images/(7)title_example.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(7)title_example.png") 
 st.image(banner, use_container_width=True)
 
-# ✅ 아래 줄에 오른쪽 정렬된 '홈으로' 버튼
-
-col1, col2 = st.columns([14,3])  # col3이 오른쪽 끝
+col1, col2 = st.columns([14,3]) 
 with col2:
     if st.button("🏠 홈으로"):
-        st.switch_page("app.py")  # 또는 정확한 페이지 경로
+        st.switch_page("app.py")  
 
-# 그림 + 설명 (데이터 입력 섹션 위)
 
-col1, col2 = st.columns([2, 3])  # 왼쪽: 영상 / 오른쪽: 설명
+col1, col2 = st.columns([2, 3])  
 
 with col1:
     st.image("images/(13)example_cartoon.png", use_container_width=True)
@@ -111,10 +104,16 @@ with col2:
 
 st.markdown("---")
 
-# 1️⃣ 데이터 입력
 st.subheader("1️⃣ 데이터 입력")
 st.markdown("연도와 1인 가구 비율(%)을 아래 표에 직접 입력하거나 수정해보세요.")
-
+st.markdown(
+    """
+    <div style='color: gray; font-size: 14px; text-align: right;'>
+        *출처: 통계청,「인구총조사」, 2024, 2025.07.31, 성 및 거처의 종류별 1인가구 - 시군구
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 df_default = pd.DataFrame({
     "연도": [1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015,
            2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
@@ -124,10 +123,8 @@ df_default = pd.DataFrame({
 df_input = st.data_editor(df_default, use_container_width=True, num_rows="dynamic")
 
 
-# 2️⃣ 산점도
 if "scatter_shown" not in st.session_state:
     st.session_state.scatter_shown = False
-# 👈🏼 버튼과 문구를 한 줄에 나란히 배치
 col_btn, col_text = st.columns([4,9])
 
 with col_btn:
@@ -159,16 +156,13 @@ if st.session_state.scatter_shown:
     ax.set_ylabel("1인 가구 비율(%)")
     st.pyplot(fig, use_container_width=False)
 
-    # ✅ 초기 설정
 if "lr_value" not in st.session_state:
-    st.session_state.lr_value = 0.0001  # 기본 학습률
+    st.session_state.lr_value = 0.0001  
 if "epochs_value" not in st.session_state:
-    st.session_state.epochs_value = 1000  # 기본 반복횟수
+    st.session_state.epochs_value = 1000  
 
-# ✅ 학습률 조절
 st.subheader("3️⃣ 모델 설정")
 
-# 🔧 학습률 조절 UI - 한 줄 구성
 st.markdown("**학습률 (learning rate)**")
 lr_col1, lr_col2, lr_col3, lr_col4 = st.columns([1, 5, 1, 4])
 
@@ -195,7 +189,6 @@ with lr_col4:
         </div>""", unsafe_allow_html=True
     )
 
-# 🔧 반복횟수 조절 UI - 한 줄 구성
 st.markdown("**반복 횟수 (epochs)**")
 ep_col1, ep_col2, ep_col3, ep_col4 = st.columns([1, 5, 1, 4])
 
@@ -222,7 +215,6 @@ with ep_col4:
     </div>""", unsafe_allow_html=True
 )
 
-# ✅ 슬라이더 변경 감지 후 예측 플래그 해제
 if "prev_lr" not in st.session_state:
     st.session_state.prev_lr = st.session_state.lr_value
 if "prev_epochs" not in st.session_state:
@@ -234,13 +226,10 @@ if st.session_state.epochs_value != st.session_state.prev_epochs:
     st.session_state.prev_epochs = st.session_state.epochs_value
 
 
-
-# ✅ 최종 사용 변수
 lr = st.session_state.lr_value
 epochs = st.session_state.epochs_value
 
 
-# ⛳ 경사하강법 함수
 def train_model(X, y, lr, epochs):
     m = 0
     b = 0
@@ -254,13 +243,11 @@ def train_model(X, y, lr, epochs):
         b -= lr * b_grad
     return m, b
 
-# 예측 실행 버튼
 if st.button("📈 예측 그래프 그리기"):
     st.session_state.predict_requested = True
     if "input_temp" not in st.session_state:
         st.session_state.input_temp = 2024
 
-# 최초 상태 설정
 if "input_temp" not in st.session_state:
     st.session_state.input_temp = 2024
 if "prev_input_temp" not in st.session_state:
@@ -268,7 +255,6 @@ if "prev_input_temp" not in st.session_state:
 if "predict_requested" not in st.session_state:
     st.session_state.predict_requested = False
 
-# 예측 그래프 및 슬라이더 유지 출력
 if st.session_state.predict_requested or (
     st.session_state.input_temp != st.session_state.prev_input_temp
 ):
@@ -279,24 +265,21 @@ if st.session_state.predict_requested or (
         valid_data = valid_data.dropna()
 
         X = valid_data["연도"].values
-        X_mean = X.mean()  # 중심화 기준
+        X_mean = X.mean() 
         X_scaled = X - X_mean
         y = valid_data["1인 가구 비율(%)"].values
         m, b = train_model(X_scaled, y, lr, epochs)
         y_pred = m * X_scaled + b
 
-        # 발산 여부 체크
         if any([math.isnan(m), math.isnan(b), np.any(np.isnan(y_pred)), np.any(np.isinf(y_pred))]):
             st.error("⚠️ 학습률이 너무 크거나 반복 횟수가 너무 많아 예측이 발산했습니다.")
             st.stop()
 
-        # 정확도 계산
         ss_total = np.sum((y - y.mean()) ** 2)
         ss_res = np.sum((y - y_pred) ** 2)
         r2 = 1 - ss_res / ss_total
         accuracy = round(r2 * 100, 2)
 
-        # 결과 출력
         st.subheader("4️⃣ 예측 결과")
         col1, col2 = st.columns(2)
 
@@ -313,18 +296,15 @@ if st.session_state.predict_requested or (
 
         with col2:
             st.markdown("#### 📌 예측 수식")
-            # 수식에서 사용할 계수 (정규화된 모델에서 원래 x로 복원한 것)
             true_m = m
             true_b = b - m * X_mean
 
-            # 이 수식을 화면에 표시
             st.latex(f"y = {true_m:.4f} \\times x {'+' if true_b >= 0 else '-'} {abs(true_b):.2f}")
 
 
             st.markdown(f"**반복 횟수**: {epochs}회")
             st.markdown(f"**학습률**: {lr}")
 
-            # 🔁 슬라이더는 계속 유지되며 값만 갱신됨
             input_temp = st.number_input(
                 label="예측하고 싶은 연도(예:2026)를 입력하세요",
                 min_value=1980,
@@ -336,10 +316,8 @@ if st.session_state.predict_requested or (
             if input_temp != st.session_state.input_temp:
                 st.session_state.input_temp = input_temp
                 st.rerun()
-                        # 1️⃣ 먼저 이전 값을 백업
             st.session_state.prev_input_temp = st.session_state.input_temp
 
-            # 2️⃣ 그 다음에 새 값을 입력
             st.session_state.input_temp = input_temp
             input_scaled = input_temp - X_mean
             pred = true_m * input_temp + true_b
@@ -364,10 +342,8 @@ if st.session_state.predict_requested or (
         st.error(f"예측에 실패했습니다: {e}")
 
     st.markdown("### 🔍 당신의 분석을 선택해보세요!")
-    # 현재 테마 감지 (light / dark)
     theme = st.get_option("theme.base")
 
-    # 다크모드/라이트모드에 따른 색상 설정
     if theme == "dark":
         inc_bg = "#004d40"
         inc_border = "#26a69a"

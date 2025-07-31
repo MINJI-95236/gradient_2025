@@ -15,7 +15,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# ✅ 한글 폰트 설정
+
 font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
 if os.path.exists(font_path):
     font_prop = fm.FontProperties(fname=font_path)
@@ -31,7 +31,7 @@ else:
 
 plt.rcParams["axes.unicode_minus"] = False
 
-# 🔒 자동 생성된 사이드바 메뉴 숨기기
+
 hide_default_sidebar = """
     <style>
     [data-testid="stSidebarNav"] {
@@ -42,10 +42,10 @@ hide_default_sidebar = """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
 
-# ---------------- 데이터 및 설정 ----------------
+
 import pandas as pd
 
-df = pd.read_csv("data/data_epoch.csv")  # 경로에 맞게 수정
+df = pd.read_csv("data/data_epoch.csv")  
 x = df["x"].values
 y = df["y"].values
 
@@ -55,12 +55,12 @@ x_centered = x - x_mean
 x_input = np.linspace(min(x), max(x), 100)
 x_plot = x_input - x_mean
 
-fixed_learning_rate = 0.001  # 학습률 고정
+fixed_learning_rate = 0.001 
 epoch_options = [100, 500, 1000, 5000]
 
-# 경사하강법 함수
+
 def gradient_descent(x, y, lr, epochs):
-    m, b = 10, -10  # ✅ 안정적인 시작점 설정
+    m, b = 10, -10  
     n = len(x)
     for _ in range(epochs):
         y_pred = m * x + b
@@ -70,7 +70,6 @@ def gradient_descent(x, y, lr, epochs):
         b -= lr * db
     return m, b
 
-# ---------------- 상태 초기화 ----------------
 if "draw_graph_epochs" not in st.session_state:
     st.session_state.draw_graph_epochs = False
 if "select_action_epochs" not in st.session_state:
@@ -80,7 +79,6 @@ for ep in epoch_options:
     if key not in st.session_state:
         st.session_state[key] = (ep == 100)
 
-# ---------------- 버튼 작업 처리 ----------------
 if st.session_state.select_action_epochs == "select_all":
     for ep in epoch_options:
         st.session_state[f"epoch_checkbox_{ep}"] = True
@@ -100,16 +98,13 @@ elif st.session_state.select_action_epochs == "reset":
     st.session_state.select_action_epochs = None
     st.rerun()
 
-# ---------------- UI 구성 ----------------
-banner = Image.open("images/(6)title_epochs_exp.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(6)title_epochs_exp.png")  
 st.image(banner, use_container_width=True)
-# ✅ 제목 바로 아래 줄 오른쪽에 '홈으로' 버튼 배치
-col1, col2 = st.columns([14,3])  # col3이 오른쪽 끝
+col1, col2 = st.columns([14,3])  
 with col2:
     if st.button("🏠 홈으로"):
         st.switch_page("app.py")
 
-# 체크박스 선택
 st.markdown("### ✅ 비교하고 싶은 반복횟수를 선택하세요")
 cols = st.columns(len(epoch_options))
 selected_epochs = []
@@ -118,7 +113,6 @@ for i, ep in enumerate(epoch_options):
     if cols[i].checkbox(f"{ep}", key=key):
         selected_epochs.append(ep)
 
-# 버튼 영역
 btn_row = st.columns([2, 1, 1, 1])
 with btn_row[0]:
     if st.button("📈 선택한 반복횟수로 그래프 그리기", use_container_width=True):
@@ -141,7 +135,6 @@ with btn_row[3]:
         st.session_state.select_action_epochs = "reset"
         st.rerun()
 
-# ---------------- 결과 출력 ----------------
 if st.session_state.draw_graph_epochs and "selected_epochs_snapshot" in st.session_state:
     st.markdown("### 📊 반복횟수별 그래프 비교")
     tabs = st.tabs([f"반복횟수={ep}" for ep in st.session_state.selected_epochs_snapshot])
@@ -165,7 +158,6 @@ if st.session_state.draw_graph_epochs and "selected_epochs_snapshot" in st.sessi
                 ax.legend()
             st.pyplot(fig)
 
-# ---------------- 정리 영역 ----------------
 st.markdown("### 📘 실습을 통해 무엇을 배웠나요?")
 st.text_area(
     "여러 반복횟수를 비교한 결과, 어떤 점을 배웠나요? 반복이 많아질수록 어떤 변화가 있었나요?",

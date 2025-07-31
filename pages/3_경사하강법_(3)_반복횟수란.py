@@ -12,7 +12,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# ✅ 한글 폰트 설정
+
 font_path = "./fonts/NotoSansKR-Regular.ttf"
 font_manager.fontManager.addfont(font_path)
 plt.rcParams["font.family"] = "Noto Sans KR"
@@ -27,12 +27,12 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-banner = Image.open("images/(4)title_epochs.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(4)title_epochs.png")  
 st.image(banner, use_container_width=True)
-col1, col2 = st.columns([14,3])  # col3이 오른쪽 끝
+col1, col2 = st.columns([14,3])  
 with col2:
     if st.button("🏠 홈으로"):
-        st.switch_page("app.py")  # 또는 정확한 페이지 경로
+        st.switch_page("app.py")  
 
 st.markdown("""
 ### 🔁 반복횟수란?
@@ -46,7 +46,7 @@ st.markdown("""
 아래 그래프는 반복횟수에 따라 예측선이 어떻게 변하는지를 보여줍니다.
 """)
 
-# ✅ 데이터 생성
+
 np.random.seed(42)
 x = np.linspace(1, 10, 20)
 y = 2 * x + 1 + np.random.normal(0, 1, size=len(x))
@@ -56,7 +56,7 @@ x_centered = x - x_mean
 x_input = np.linspace(min(x), max(x), 100)
 x_input_centered = x_input - x_mean
 
-# ✅ 경사하강법
+
 def gradient_descent(x, y, lr, epochs):
     m, b = 0, 0
     n = len(x)
@@ -68,21 +68,21 @@ def gradient_descent(x, y, lr, epochs):
         b -= lr * db
     return m, b
 
-# ✅ 시각화
+
 learning_rate = 0.005
 epoch_list = [10, 100, 400, 1000]
 colors = ["purple", "green", "orange", "brown"]
 fig, ax = plt.subplots()
 ax.scatter(x, y, color="blue", label="입력 데이터")
 
-# 정확도 저장용 텍스트
+
 accuracy_text = ""
 
 for epoch, color in zip(epoch_list, colors):
     m, b = gradient_descent(x_centered, y, learning_rate, epoch)
     y_pred = m * x_input_centered + b
     ax.plot(x_input, y_pred, label=f"{epoch}회 반복", color=color, linestyle='-', linewidth=2)
-    # 정확도(R²) 계산
+    
     y_train_pred = m * x_centered + b
     r2 = r2_score(y, y_train_pred)
     accuracy_percent = round(r2 * 100)
@@ -94,12 +94,12 @@ ax.set_ylabel("y")
 ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1.0))
 st.pyplot(fig)
 
-# ✅ 정확도 텍스트 출력
+
 st.markdown("### 📈 반복횟수별 정확도")
 st.code(accuracy_text, language="markdown")
 
 
-# ✅ 사이드바 메뉴
+
 with st.sidebar:
     st.page_link("app.py", label="HOME", icon="🏠")
     st.markdown("---")

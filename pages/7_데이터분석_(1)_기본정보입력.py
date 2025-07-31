@@ -7,7 +7,6 @@ st.set_page_config(
     layout="centered"
 )
 
-# 🔒 자동 생성된 사이드바 메뉴 숨기기
 hide_default_sidebar = """
     <style>
     [data-testid="stSidebarNav"] {
@@ -16,7 +15,7 @@ hide_default_sidebar = """
     </style>
 """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
-banner = Image.open("images/(8)title_basic_info.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(8)title_basic_info.png")  
 st.image(banner, use_container_width=True)
 
 name = st.text_input("이름", value=st.session_state.get("name", ""), key="input_name")
@@ -24,10 +23,8 @@ student_id = st.text_input("학번", value=st.session_state.get("student_id", ""
 school = st.text_input("학교", value=st.session_state.get("school", ""), key="input_school")
 date = st.date_input("날짜 선택", value=st.session_state.get("date"), key="input_date")
 
-# 저장 버튼
 if st.button("✅ 저장하기"):
     if name and student_id and school:
-        # session_state에 저장
         st.session_state.name = name
         st.session_state.student_id = student_id
         st.session_state.school = school

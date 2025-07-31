@@ -7,7 +7,7 @@ from matplotlib.ticker import MaxNLocator
 import os
 from matplotlib import font_manager as fm
 import matplotlib
-matplotlib.use("Agg")  # ✅ Streamlit에서 안정적으로 폰트 렌더링
+matplotlib.use("Agg")  
 from PIL import Image
 
 st.set_page_config(
@@ -16,7 +16,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# ✅ 한글 폰트 설정
+
 font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
 if os.path.exists(font_path):
     fm.fontManager.addfont(font_path)
@@ -34,7 +34,7 @@ else:
 
 plt.rcParams["axes.unicode_minus"] = False
 
-# 🔒 자동 생성된 사이드바 메뉴 숨기기
+
 hide_default_sidebar = """
     <style>
     [data-testid="stSidebarNav"] {
@@ -45,9 +45,9 @@ hide_default_sidebar = """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
 
-# ---------------- 데이터 및 함수 정의 ----------------
+
 x = np.linspace(0, 20, 20)
-noise = np.random.normal(0, 2.0, size=len(x))  # 더 강한 노이즈로 분산 증가
+noise = np.random.normal(0, 2.0, size=len(x))  
 y = 5 * x + 10 + noise
 
 x_mean = np.mean(x)
@@ -57,7 +57,7 @@ x_plot = x_input - x_mean
 fixed_epochs = 100
 
 def gradient_descent(x, y, lr, epochs):
-    m, b = 10, -10  # ✅ 안정적인 시작점 설정
+    m, b = 10, -10  
     n = len(x)
     for _ in range(epochs):
         y_pred = m * x + b
@@ -67,7 +67,7 @@ def gradient_descent(x, y, lr, epochs):
         b -= lr * db
     return m, b
 
-# ---------------- 상태 초기화 ----------------
+
 learning_rates = [0.0001, 0.001, 0.01, 0.1]
 
 if "draw_graph" not in st.session_state:
@@ -79,7 +79,6 @@ for lr in learning_rates:
     if key not in st.session_state:
         st.session_state[key] = (lr == 0.001)
 
-# ---------------- 버튼 작업 처리 (선택/초기화 등) ----------------
 if st.session_state.select_action == "select_all":
     for lr in learning_rates:
         st.session_state[f"lr_checkbox_{lr}"] = True
@@ -97,11 +96,11 @@ elif st.session_state.select_action == "reset":
     st.session_state.select_action = None
     st.rerun()
 
-# ---------------- UI 구성 시작 ----------------
-banner = Image.open("images/(5)title_learning_rate_exp.png")  # 이미지 경로는 저장 위치에 따라 조정
+
+banner = Image.open("images/(5)title_learning_rate_exp.png")  
 st.image(banner, use_container_width=True)
-# ✅ 제목 바로 아래 줄 오른쪽에 '홈으로' 버튼 배치
-col1, col2 = st.columns([14,3])  # col3이 오른쪽 끝
+
+col1, col2 = st.columns([14,3])  
 with col2:
     if st.button("🏠 홈으로"):
         st.switch_page("app.py")
@@ -140,7 +139,7 @@ with btn_row[3]:
         st.session_state.select_action = "reset"
         st.rerun()
 
-# ---------------- 결과 출력 ----------------
+
 if st.session_state.draw_graph and "selected_rates_snapshot" in st.session_state:
     st.markdown("### 📊 학습률별 그래프 비교")
     tabs = st.tabs([f"학습률={lr}" for lr in st.session_state.selected_rates_snapshot])
@@ -164,7 +163,7 @@ if st.session_state.draw_graph and "selected_rates_snapshot" in st.session_state
                 ax.legend()
             st.pyplot(fig)
 
-# ---------------- 실습 정리 ----------------
+
 st.markdown("### 📘 실습을 통해 무엇을 배웠나요?")
 st.text_area(
     "여러 학습률을 비교한 결과, 어떤 점을 배웠나요? 가장 적절한 학습률은 무엇이라고 생각하나요?",

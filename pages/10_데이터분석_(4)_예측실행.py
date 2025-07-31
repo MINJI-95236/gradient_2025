@@ -12,7 +12,6 @@ import math
 from PIL import Image
 
 
-# ✅ 한글 폰트 설정
 font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
 if os.path.exists(font_path):
     matplotlib.font_manager.fontManager.addfont(font_path)
@@ -35,7 +34,6 @@ st.set_page_config(
     layout="centered"
 )
 
-# 🔒 자동 생성된 사이드바 메뉴 숨기기
 hide_default_sidebar = """
     <style>
     [data-testid="stSidebarNav"] {
@@ -46,7 +44,7 @@ hide_default_sidebar = """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
 
-banner = Image.open("images/(11)title_run_prediction.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(11)title_run_prediction.png")  
 st.image(banner, use_container_width=True)
 with st.sidebar:
     st.page_link("app.py", label="HOME", icon="🏠")
@@ -89,7 +87,7 @@ if "epochs_value" not in st.session_state:
     st.session_state.epochs_value = 1000
 if "predict_requested" not in st.session_state:
     st.session_state.predict_requested = False
-if "attempt_count" not in st.session_state:  # ✅ 시도 횟수 초기화
+if "attempt_count" not in st.session_state:  
     st.session_state.attempt_count = 0
 
 learning_rate = st.session_state.lr_value
@@ -106,7 +104,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 제목과 라디오 버튼
 with st.container():
     st.markdown("### 📈 함수 형태를 선택하세요")
     func_type = st.radio(
@@ -115,7 +112,6 @@ with st.container():
         label_visibility="collapsed"
     )
 
-# 🔁 학습률 및 반복횟수 슬라이더 UI
 st.markdown("### 🔧 학습률 조절")
 lr_col1, lr_col2, lr_col3, lr_col4 = st.columns([1, 5, 1, 4])
 with lr_col1:
@@ -146,7 +142,6 @@ with ep_col3:
 with ep_col4:
     st.markdown(f"<b>현재 반복 횟수: {st.session_state.epochs_value}회</b>", unsafe_allow_html=True)
 
-# ✅ 예측 실행 버튼
 if st.button("📈 예측 실행"):
     x_arr = np.array(x_raw)
     y_arr = np.array(y_raw)
@@ -157,11 +152,10 @@ if st.button("📈 예측 실행"):
 
     st.session_state.predict_requested = True
     st.session_state.history = []
-    st.session_state.attempt_count += 1  # ✅ 시도 횟수 증가
+    st.session_state.attempt_count += 1  
 
-# ✅ 예측 실행 플래그가 설정된 경우에만 실행
 if st.session_state.predict_requested:
-    st.divider() # ✅ 구분선
+    st.divider() 
     st.markdown("### 📊 예측 결과")
     x = np.array(x_raw)
     y = np.array(y_raw)
@@ -180,10 +174,8 @@ if st.session_state.predict_requested:
             m -= learning_rate * (2 / len(x)) * (error @ x_scaled)
             b -= learning_rate * (2 / len(x)) * error.sum()
 
-# 예측선
             y_pred = m * x_plot_scaled + b
 
-            # 실제 해석 가능한 수식으로 변환
             m_real = m / x_std
             b_real = -m * x_mean / x_std + b
             equation = f"y = {m_real:.4f}x {'+' if b_real >= 0 else '-'} {abs(b_real):.4f}"
@@ -218,7 +210,6 @@ if st.session_state.predict_requested:
     ss_res = np.sum((y - y_pred_for_accuracy) ** 2)
     r2 = 1 - ss_res / ss_total
 
-    # 예측 발산 여부 검사 (학습률이 너무 크거나 반복이 너무 많을 경우 방지)
     if (
         np.any(np.isnan(y_pred)) or np.any(np.isinf(y_pred)) or
         np.isnan(ss_total) or np.isnan(ss_res) or np.isnan(r2) or
@@ -258,13 +249,11 @@ if st.session_state.predict_requested:
         input_x = st.number_input("예측하고 싶은 값을 입력하세요. (예: 연도, 나이, 기온 등)", value=int(x[-1]) + 1, step=1)
 
         try:
-            # ✅ 수식 기반 직접 예측
             if func_type == "1차 함수":
                 y_input_pred = m_real * input_x + b_real
             else:
                 y_input_pred = a_real * input_x**2 + b_real * input_x + c_real
 
-            # ✅ 유효 범위 내 예측값인지 확인
             y_min, y_max = y.min(), y.max()
             y_range = y_max - y_min
             margin = 0.5
@@ -285,7 +274,7 @@ if st.session_state.predict_requested:
                 "predicted_value": y_input_pred,
                 "input_value": input_x,
                 "accuracy": accuracy, 
-                "attempt_count": st.session_state.attempt_count   # ✅ 이 줄을 꼭 추가
+                "attempt_count": st.session_state.attempt_count   
 
             }
 
@@ -315,5 +304,5 @@ if st.session_state.predict_requested:
             st.switch_page("pages/9_데이터분석_(3)_데이터입력.py")
     with colC:
         if st.button("➡️ 다음", key="go_summary"):
-            st.session_state["predict_summary"] = predict_text  # 수동으로 저장
+            st.session_state["predict_summary"] = predict_text 
             st.switch_page("pages/11_데이터분석_(5)_요약결과.py")

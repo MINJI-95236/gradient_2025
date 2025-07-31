@@ -6,19 +6,18 @@ import platform
 from matplotlib import font_manager
 from PIL import Image
 
-# ✅ 페이지 메타 설정 (브라우저 탭 제목 및 아이콘)
 st.set_page_config(
     page_title="경사하강법 (2) 학습률이란?",
     page_icon="📖",
     layout="centered"
 )
-# 프로젝트 내 폰트 경로 등록
+
 font_path = "./fonts/NotoSansKR-Regular.ttf"
 font_manager.fontManager.addfont(font_path)
 plt.rcParams["font.family"] = "Noto Sans KR"
 plt.rcParams["axes.unicode_minus"] = False
 
-# 🔒 자동 생성된 사이드바 메뉴 숨기기
+
 hide_default_sidebar = """
     <style>
     [data-testid="stSidebarNav"] {
@@ -28,13 +27,13 @@ hide_default_sidebar = """
 """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
-# ✅ 배너 이미지 삽입 (제목 대체)
-banner = Image.open("images/(3)title_learning_rate.png")  # 이미지 경로는 저장 위치에 따라 조정
+
+banner = Image.open("images/(3)title_learning_rate.png") 
 st.image(banner, use_container_width=True)
-col1, col2 = st.columns([14,3])  # col3이 오른쪽 끝
+col1, col2 = st.columns([14,3])  
 with col2:
     if st.button("🏠 홈으로"):
-        st.switch_page("app.py")  # 또는 정확한 페이지 경로
+        st.switch_page("app.py")  
 st.markdown("""
 ### 🧪 학습률이란?
 
@@ -48,13 +47,13 @@ st.markdown("""
 """)
 
 
-#학습률 이미지 추가
+
 from PIL import Image
 import streamlit as st
 
 col1, col2 = st.columns(2)
 with col1:
-    img1 = Image.open("images/(14)example_too_small_lr.png").resize((400, 400))  # (width, height)
+    img1 = Image.open("images/(14)example_too_small_lr.png").resize((400, 400))  
     st.image(img1)
 
 with col2:
@@ -63,7 +62,7 @@ with col2:
 
 st.markdown("")
 
-# 두 번째 줄 - 이미지 두 개
+
 col3, col4 = st.columns(2)
 with col3:
     img3 = Image.open("images/(15)example_good_lr_1.png").resize((400, 400))

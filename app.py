@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 st.set_page_config(page_title="나만의 데이터 연구소", page_icon="🤖", layout="wide")
 
 hide_default_sidebar = """
@@ -11,7 +12,6 @@ hide_default_sidebar = """
 """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
-# ✅ 카드 제목 여백 조절을 위한 CSS
 st.markdown("""
     <style>
     .card-title-custom {
@@ -31,12 +31,19 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ✅ 메인 타이틀
-# ✅ 배너 이미지 삽입 (타이틀 대신)
+st.markdown(
+    """
+    <div style='color: black; font-size: 20px; text-align: right; margin-bottom: 6px;'>
+        *대상학년: 고등학교 2~3학년
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 from PIL import Image
 
-banner = Image.open("images/(1)main_banner.png")  # 이미지 경로는 네 이미지 위치에 맞게 수정
-st.image(banner, use_container_width=True)   # 또는 width=1200 같은 고정 폭도 가능
+banner = Image.open("images/(1)main_banner.png")  
+st.image(banner, use_container_width=True)   
 
 st.markdown("---")
 
@@ -88,11 +95,9 @@ with col4:
         st.page_link("pages/10_데이터분석_(4)_예측실행.py", label="(4) 예측 실행")
         st.page_link("pages/11_데이터분석_(5)_요약결과.py", label="(5) 요약 결과")
 
-# ✅ 안내 메시지
 st.markdown("---")
 st.success("왼쪽 메뉴 또는 위 카드에서 원하는 항목을 선택해 학습을 시작하세요!")
 
-# ✅ 사이드바 구성 (예제를 데이터분석보다 위로 정렬)
 with st.sidebar:
     st.page_link("app.py", label="HOME", icon="🏠")
     st.markdown("---")

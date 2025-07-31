@@ -16,7 +16,7 @@ hide_default_sidebar = """
 """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
-banner = Image.open("images/(9)title_select_topic.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(9)title_select_topic.png")  
 st.image(banner, use_container_width=True)
 with st.sidebar:
     st.page_link("app.py", label="HOME", icon="🏠")
@@ -48,16 +48,14 @@ if "name" not in st.session_state:
     st.warning("이전 단계에서 데이터를 먼저 입력해 주세요.")
     st.stop()
 
-# 주제 입력
 subject = st.text_area(
     "📌 국가통계포털을 이용해 분석하고 싶은 데이터를 찾아보고, 주제를 작성하세요!",
     value=st.session_state.get("subject", ""),
     placeholder="예: 공부시간에 대한 성적 예측하기",
-    key="input_subject"  # 고유 key 설정
+    key="input_subject"  
 )
 st.markdown("[🔎 국가통계포털 바로가기](https://kosis.kr/index/index.do)", unsafe_allow_html=True)
 
-# 👉 주제 저장 버튼은 col_right에 배치
 col_left, col_right = st.columns([3, 1])
 with col_left:
     with open("data/sample data.xlsx", "rb") as file:
@@ -76,7 +74,6 @@ with col_right:
         else:
             st.warning("⚠️ 주제를 입력해주세요.")
 
-# 👉 메시지는 컬럼 바깥에 전역으로 표시
 if st.session_state.get("subject_saved"):
     st.success("✅ 주제가 저장되었습니다! 왼쪽 메뉴에서 다음 단계로 이동하세요.")
 

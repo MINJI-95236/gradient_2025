@@ -10,7 +10,6 @@ import os
 from PIL import Image
 
 
-# ✅ 한글 폰트 설정
 font_path = os.path.join("fonts", "NotoSansKR-Regular.ttf")
 if os.path.exists(font_path):
     font_prop = fm.FontProperties(fname=font_path)
@@ -32,7 +31,6 @@ st.set_page_config(
     layout="centered"
 )
 
-# 🔒 자동 생성된 사이드바 메뉴 숨기기
 hide_default_sidebar = """
     <style>
     [data-testid="stSidebarNav"] {
@@ -42,7 +40,7 @@ hide_default_sidebar = """
 """
 st.markdown(hide_default_sidebar, unsafe_allow_html=True)
 
-banner = Image.open("images/(10)title_data_input.png")  # 이미지 경로는 저장 위치에 따라 조정
+banner = Image.open("images/(10)title_data_input.png")  
 st.image(banner, use_container_width=True)
 
 with st.sidebar:
@@ -71,7 +69,6 @@ with st.sidebar:
     st.page_link("pages/10_데이터분석_(4)_예측실행.py", label="(4) 예측 실행")
     st.page_link("pages/11_데이터분석_(5)_요약결과.py", label="(5) 요약 결과")
 
-# 🔒 이전 단계 확인
 if "name" not in st.session_state or "subject" not in st.session_state:
     st.warning("이전 단계에서 데이터를 먼저 입력해 주세요.")
     st.stop()
@@ -98,35 +95,28 @@ x축과 y축 이름, 데이터를 입력한 후에는 반드시 **[💾 데이�
 저장을 완료하지 않으면 **x/y축 이름 변경이 제대로 적용되지 않을 수 있습니다.**
 """)
 
-# ✅ x, y 라벨 입력
-# ✅ x, y 라벨 입력 (입력은 그대로 받고 내부 처리는 안전하게)
 default_x = "예: 공부 시간"
 default_y = "예: 성적"
 
 input_x_label = st.text_input("x축 이름", placeholder=default_x)
 input_y_label = st.text_input("y축 이름", placeholder=default_y)
-# ✅ 컬럼명 안전 보정 함수
 def safe_column_name(label, default):
     if not label or str(label).strip() == "":
         return default
     return str(label).strip()
 
 
-# ✅ 내부 처리용 안전한 이름으로 변환
 x_label = safe_column_name(input_x_label, "X")
 y_label = safe_column_name(input_y_label, "Y")
 
-# ✅ 세션에 저장
 st.session_state.x_label = x_label
 st.session_state.y_label = y_label
 
-# ✅ 라벨이 둘 다 없으면 아래 UI 숨기고 안내 문구만 출력
 if input_x_label.strip() == "" or input_y_label.strip() == "":
     st.markdown("✅ x/y축 이름을 입력하면 아래에 표가 나타납니다.")
     st.stop()
 
 
-# ✅ 초기 테이블
 if "table_data" not in st.session_state:
     st.session_state.table_data = pd.DataFrame({"x": [0.0] * 10, "y": [0.0] * 10})
 
@@ -134,7 +124,6 @@ safe_x_label = x_label
 safe_y_label = y_label
 display_data = st.session_state.table_data.rename(columns={"x": safe_x_label, "y": safe_y_label})
 
-# ✅ 표 UI
 edited_data = st.data_editor(
     display_data,
     num_rows="dynamic",
@@ -146,14 +135,11 @@ edited_data = st.data_editor(
     key="data_editor"
 )
 
-# 상태 키 초기화
 if "show_plot" not in st.session_state:
     st.session_state.show_plot = False
 
-# 📌 버튼 영역
 col1, col2, col3 = st.columns([1, 1, 1])
 
-# 💾 데이터 저장
 with col1:
     if st.button("💾 데이터 저장"):
         st.info("📌 저장 후 [📊 산점도 보기]를 눌러야 다음 단계로 이동할 수 있습니다.")
@@ -166,19 +152,16 @@ with col1:
         except Exception as e:
             st.warning("저장 중 오류: " + str(e))
 
-# 📊 산점도 보기
 with col2:
     if st.button("📊 산점도 보기"):
         st.session_state.show_plot = True
 
-# 🔄 초기화
 with col3:
     if st.button("🔄 데이터 초기화"):
         st.session_state.table_data = pd.DataFrame({"x": [None]*10, "y": [None]*10})
         st.session_state.show_plot = False
         st.success("모든 데이터가 초기화되었습니다.")
 
-# 📈 산점도
 if st.session_state.show_plot:
     try:
         df = st.session_state.table_data.dropna()
@@ -230,7 +213,6 @@ if st.session_state.show_plot:
     except Exception as e:
         st.error("산점도 오류: " + str(e))
 
-# ⏩ 다음 단계
 if "x_values" in st.session_state and "y_values" in st.session_state:
     colA, colB, colC = st.columns([3, 15, 3])
     with colA:
